@@ -13,16 +13,19 @@ defmodule CommentBoxWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", CommentBoxWeb do
-    pipe_through :browser # Use the default browser stack
-
-    get "/", PageController, :index
-  end
+  
   
   # Other scopes may use custom stacks.
   scope "/api", CommentBoxWeb do
     pipe_through :api
     
     resources "/comment", CommentController, except: [:new, :edit]
+  end
+
+  scope "/", CommentBoxWeb do
+    pipe_through :browser # Use the default browser stack
+
+    get "/", PageController, :index
+    get "/app/*routepath", PageController, :app
   end
 end
