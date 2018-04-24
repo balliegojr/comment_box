@@ -14,7 +14,6 @@
 import "phoenix_html"
 import React from "react"
 import ReactDOM from "react-dom"
-import { BrowserRouter, Route } from "react-router-dom"
 import { Provider } from "react-redux"
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
@@ -26,11 +25,8 @@ import thunk from 'redux-thunk';
 
 import socket from "./socket"
 import commentsReducer from './store/reducers/commentsReducer'
-import pageReducer from "./store/reducers/pageReducer";
-
-import { CommentBox } from './components/comments/commentBox'
-import ComentList from './containers/comments/commentList'
-
+import pageSettingsReducer from "./store/reducers/pageSettingsReducer";
+import PageDisplay from './containers/pageDisplay'
 /*
     Load page details
         show comments if user authenticated or page allows to unauthenticated
@@ -41,26 +37,24 @@ import ComentList from './containers/comments/commentList'
 */
 
 const rootReducer = combineReducers({
-    page: pageReducer,
+    pageSettings: pageSettingsReducer,
     comments: commentsReducer
 });
 
-const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
-
-class ReactApp extends React.Component {
-    render() {
-        return (
-            <BrowserRouter basename="/app/">
-                <div>
-                    <Route path="" component={CommentBox} />
-                    <Route path="" component={ComentList} />
-                </div>
-            </BrowserRouter>
-        )
+const logger = store => {
+    return next => {
+        return action => {
+            console.log('[Middleware] Dispatching', action);
+            const result = next(action);
+            console.log('[Middleware] next state', store.getState());
+            return result;
+        }
     }
-}
+};
+
+const store = createStore(rootReducer, compose(applyMiddleware(logger, thunk)));
 
 ReactDOM.render(
-    <Provider store={store}><ReactApp /></Provider>,
+    <Provider store={store}><PageDisplay /></Provider>,
     document.getElementById("hello-react")
 )

@@ -3,11 +3,11 @@ defmodule CommentBoxWeb.CommentView do
   alias CommentBoxWeb.CommentView
 
   def render("index.json", %{comment: comment}) do
-    %{data: render_many(comment, CommentView, "comment.json")}
+    render_many(comment, CommentView, "comment.json")
   end
 
   def render("show.json", %{comment: comment}) do
-    %{data: render_one(comment, CommentView, "comment.json")}
+    render_one(comment, CommentView, "comment.json")
   end
 
   def render("comment.json", %{comment: comment}) do
