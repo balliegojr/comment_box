@@ -5,6 +5,22 @@ const initialState = {
     loadedComments: []
 }
 
+
+const addComment = (state, comment) => {
+    const comments = state.loadedComments.slice();
+    if (!comments.some((c) => c.id === comment.id)) {
+        comments.unshift(comment);
+    }
+
+    return expandObject(state, { loadedComments: comments });
+}
+
+const updateComment = (state, comment) => {
+    const comments = state.loadedComments.filter(c => c.id !== comment.id ? c : comment);
+
+    return expandObject(state, { loadedComments: comments });
+}
+
 const commentsReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.LOADING_COMMENTS:
@@ -12,10 +28,9 @@ const commentsReducer = (state = initialState, action) => {
         case actionTypes.SET_COMMENTS:
             return expandObject(state, { loadedComments: action.payload, isLoading: false});
         case actionTypes.ADD_COMMENT:
-            const comments = state.loadedComments.slice();
-            comments.unshift(action.payload);
-            
-            return expandObject(state, { loadedComments: comments });
+            return addComment(state, action.payload);
+        case actionTypes.UPDATE_COMMENT:
+            return updateComment(state, action.payload);
     }
     
     return state;

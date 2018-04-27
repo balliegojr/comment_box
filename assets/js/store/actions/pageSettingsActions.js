@@ -22,12 +22,11 @@ export const setPageSettingsError = (reason) => {
     }
 }
 
-export const loadPageSettings = () => {
-    return dispatch => {
-        dispatch(setLoadingPageSettings(true));
-        axios.get("/api/page")
-            .then(pageSettings => {
-                dispatch(setPageSettings(pageSettings.data))
-            }, reason => dispatch(setPageSettingsError(reason)));
-    }
+export const loadPageSettings = () => dispatch => {
+    dispatch(setLoadingPageSettings(true));
+    
+    return axios.get("/api/page")
+        .then(pageSettings => {
+            dispatch(setPageSettings(pageSettings.data))
+        }, reason => dispatch(setPageSettingsError(reason)));
 };

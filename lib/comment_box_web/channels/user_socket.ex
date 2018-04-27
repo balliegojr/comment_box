@@ -2,7 +2,7 @@ defmodule CommentBoxWeb.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "room:*", CommentBoxWeb.RoomChannel
+  channel "page:*", CommentBoxWeb.PageChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

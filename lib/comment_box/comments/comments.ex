@@ -169,7 +169,15 @@ defmodule CommentBox.Comments do
     %Comment{}
     |> Comment.changeset(attrs)
     |> Repo.insert()
+    |> notify_comment_to("comment_new")
   end
+
+  defp notify_comment_to({:ok, %Comment{} = comment}, message) do 
+    CommentBoxWeb.Endpoint.broadcast("page:#{comment.page_id}", message,  Map.delete(comment, :__meta__))
+
+    {:ok, comment}
+  end
+  defp notify_comment_to({:error, %Comment{} = changeset}, message), do: {:error, changeset}
 
   @doc """
   Updates a comment.
