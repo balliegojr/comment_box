@@ -17,7 +17,7 @@ defmodule CommentBox.Comments.Comment do
   @doc false
   def changeset(comment, attrs) do
     comment
-    |> cast(attrs, [:content, :status])
-    |> validate_required([:content, :status])
+    |> cast(attrs, [:content, :status, :page_id, :user_id, :reply_to, :reputation])
+    |> validate_required([:content, :status, :page_id])
   end
 end

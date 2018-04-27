@@ -6,8 +6,8 @@ defmodule CommentBox.CommentsTest do
   describe "pages" do
     alias CommentBox.Comments.Page
 
-    @valid_attrs %{reputation: 42, status: 42, url: "some url"}
-    @update_attrs %{reputation: 43, status: 43, url: "some updated url"}
+    @valid_attrs %{reputation: 42, status: 42, url: "some url", hashed_url: "B19EACCD2D7354CFB67986AA657A28C9", allowAnonymousComments: true, allowAnonymousView: true}
+    @update_attrs %{reputation: 43, status: 43, url: "some updated url", hashed_url: "FD6B2C3AD89E06714C7CDE79048FFC62"}
     @invalid_attrs %{reputation: nil, status: nil, url: nil}
 
     def page_fixture(attrs \\ %{}) do
@@ -27,6 +27,17 @@ defmodule CommentBox.CommentsTest do
     test "get_page!/1 returns the page with given id" do
       page = page_fixture()
       assert Comments.get_page!(page.id) == page
+    end
+
+    test "get_page_by_url_or_create/1 returns the page with a given url or create a new one" do
+      page = Comments.get_page_by_url_or_create("a magnific url");
+      assert page.url == "a magnific url"
+      assert page.hashed_url  == Page.hash_url("a magnific url")
+      assert page.allowAnonymousComments == false
+      assert page.allowAnonymousView == true
+
+      assert page.id == Comments.get_page_by_url_or_create("a magnific url").id;
+      assert page.id != Comments.get_page_by_url_or_create("another magnific url").id;
     end
 
     test "create_page/1 with valid data creates a page" do
@@ -75,9 +86,12 @@ defmodule CommentBox.CommentsTest do
     @invalid_attrs %{content: nil, status: nil}
 
     def comment_fixture(attrs \\ %{}) do
+      page = Comments.get_page_by_url_or_create("default url")
+
+
       {:ok, comment} =
         attrs
-        |> Enum.into(@valid_attrs)
+        |> Enum.into(Map.put(@valid_attrs, :page_id, page.id))
         |> Comments.create_comment()
 
       comment
@@ -88,13 +102,21 @@ defmodule CommentBox.CommentsTest do
       assert Comments.list_comment() == [comment]
     end
 
+    test "list_comment_by_page/1 returns all comments of given page" do
+      comment = comment_fixture()
+      assert Comments.list_comment_by_page(comment.page_id) == [comment]
+      assert Comments.list_comment_by_page(0) == []
+    end
+
     test "get_comment!/1 returns the comment with given id" do
       comment = comment_fixture()
       assert Comments.get_comment!(comment.id) == comment
     end
 
     test "create_comment/1 with valid data creates a comment" do
-      assert {:ok, %Comment{} = comment} = Comments.create_comment(@valid_attrs)
+      page = Comments.get_page_by_url_or_create("default url")
+      
+      assert {:ok, %Comment{} = comment} = Comments.create_comment(Map.put(@valid_attrs, :page_id, page.id))
       assert comment.content == "some content"
       assert comment.status == 42
     end

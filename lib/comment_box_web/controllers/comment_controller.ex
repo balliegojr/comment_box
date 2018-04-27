@@ -39,4 +39,9 @@ defmodule CommentBoxWeb.CommentController do
       send_resp(conn, :no_content, "")
     end
   end
+
+  def get_page_comments(conn, %{"page_id" => page_id}) do
+      comment = Comments.list_comment_by_page(page_id)
+      render(conn, "index.json", comment: comment)
+  end
 end

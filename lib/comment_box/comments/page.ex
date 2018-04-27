@@ -15,6 +15,8 @@ defmodule CommentBox.Comments.Page do
     timestamps()
   end
 
+  def hash_url(url), do: :crypto.hash(:md5, url) |> Base.encode16()
+
   @doc false
   def changeset(page, attrs) do
     page

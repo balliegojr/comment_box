@@ -20,7 +20,9 @@ defmodule CommentBoxWeb.Router do
     pipe_through :api
     
     resources "/comment", CommentController, except: [:new, :edit]
+    
     get "/page", PageSettingsController, :get_page_settings
+    get "/page/:page_id/comment", CommentController, :get_page_comments
   end
 
   scope "/", CommentBoxWeb do

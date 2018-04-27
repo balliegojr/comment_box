@@ -11,7 +11,6 @@ defmodule CommentBoxWeb.CommentView do
   end
 
   def render("comment.json", %{comment: comment}) do
-    IO.inspect comment
     %{
       id: comment.id,
       content: comment.content,

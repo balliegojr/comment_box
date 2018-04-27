@@ -21,14 +21,14 @@ export const setCommentsError = (reason) => {
     }
 }
 
-export const loadComments = () => {
-    return dispatch => {
-        dispatch(setLoadingComments(true));
-        axios.get("/api/comment")
-            .then(comments => {
-                dispatch(setComments(comments.data))
-            }, reason => dispatch(setCommentsError(reason)));
-    }
+export const loadComments = () => (dispatch, getStore) => {
+    const page_id = getStore().pageSettings.id;
+    dispatch(setLoadingComments(true));
+    axios.get(`/api/page/${page_id}/comment`)
+        .then(comments => {
+            dispatch(setComments(comments.data))
+        }, reason => dispatch(setCommentsError(reason)));
+
 };
 
 export const appendComment = (comment) => {

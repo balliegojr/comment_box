@@ -38,10 +38,10 @@ defmodule CommentBox.Comments do
   def get_page!(id), do: Repo.get!(Page, id)
 
   def get_page_by_url_or_create(url) do
-    hash_url = :crypto.hash(:md5, url) |> Base.encode16()
+    hash_url = Page.hash_url(url)
     case Repo.get_by(Page, hashed_url: hash_url) do
         nil -> 
-            case create_page(%{ :hashed_url => hash_url, :url => url, :status => 0, :reputation => 0}) do
+            case create_page(%{ :hashed_url => hash_url, :url => url, :status => 0, :reputation => 0, :allowAnonymousComments => false, :allowAnonymousView => true}) do
                 {:ok, page} -> page
             end
         page -> page
@@ -126,6 +126,15 @@ defmodule CommentBox.Comments do
   """
   def list_comment do
     Repo.all(Comment)
+  end
+
+  def list_comment_by_page(page_id) do
+    query = from c in Comment, 
+        where: c.page_id == ^page_id,
+        order_by: [desc: c.inserted_at],
+        select: c
+
+    Repo.all(query)
   end
 
   @doc """
