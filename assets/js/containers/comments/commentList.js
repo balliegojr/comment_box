@@ -18,7 +18,7 @@ class CommentList extends React.Component {
             )
         }
 
-        const comments = this.props.comments.loadedComments.map((comment) => (<Comment comment={comment} />))
+        const comments = this.props.comments.loadedComments.map((comment) => (<Comment key={comment.id} comment={comment} />))
         return (
             <ul className="comments">
                 {comments}
@@ -38,12 +38,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onLoadComments: () => dispatch(commentActions.loadComments())
-        // onIncrementCounter: () => dispatch(actionCreators.increment()),
-        // onDecrementCounter: () => dispatch(actionCreators.decrement()),
-        // onAddCounter: () => dispatch(actionCreators.add(10)),
-        // onSubtractCounter: () => dispatch(actionCreators.subtract(15)),
-        // onStoreResult: (result) => dispatch(actionCreators.storeResult(result)),
-        // onDeleteResult: (id) => dispatch(actionCreators.deleteResult(id))
     }
 };
 

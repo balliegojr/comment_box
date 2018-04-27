@@ -11,6 +11,11 @@ const commentsReducer = (state = initialState, action) => {
             return expandObject(state, { isLoading: action.payload })
         case actionTypes.SET_COMMENTS:
             return expandObject(state, { loadedComments: action.payload, isLoading: false});
+        case actionTypes.ADD_COMMENT:
+            const comments = state.loadedComments.slice();
+            comments.unshift(action.payload);
+            
+            return expandObject(state, { loadedComments: comments });
     }
     
     return state;

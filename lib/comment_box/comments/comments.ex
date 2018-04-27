@@ -37,6 +37,17 @@ defmodule CommentBox.Comments do
   """
   def get_page!(id), do: Repo.get!(Page, id)
 
+  def get_page_by_url_or_create(url) do
+    hash_url = :crypto.hash(:md5, url) |> Base.encode16()
+    case Repo.get_by(Page, hashed_url: hash_url) do
+        nil -> 
+            case create_page(%{ :hashed_url => hash_url, :url => url, :status => 0, :reputation => 0}) do
+                {:ok, page} -> page
+            end
+        page -> page
+    end
+  end
+
   @doc """
   Creates a page.
 

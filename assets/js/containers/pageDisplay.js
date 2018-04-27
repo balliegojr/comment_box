@@ -3,7 +3,7 @@ import { BrowserRouter, Route } from "react-router-dom"
 
 import { connect } from "react-redux";
 
-import { CommentBox } from '../components/comments/commentBox'
+import CommentBox from '../components/comments/commentBox'
 import ComentList from './comments/commentList'
 import *  as pageActions from '../store/actions/pageSettingsActions'
 
@@ -14,12 +14,11 @@ class PageDisplay extends Component {
 
     render() {
         return (
-            <BrowserRouter basename="/app/">
-                <div>
-                    <Route path="" component={CommentBox} />
-                    <Route path="" component={ComentList} />
-                </div>
-            </BrowserRouter>
+            <div>
+                { !this.props.settings.allowAnonymousComment ? <Route path="" component={CommentBox} /> : <div>Not allowed to comment</div> }
+                <hr />
+                { this.props.settings.allowAnonymousView ? <Route path="" component={ComentList} /> : <div>Not allowed to view comments</div> }
+            </div>
         )
     }
 }

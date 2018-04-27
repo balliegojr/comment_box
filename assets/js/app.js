@@ -17,6 +17,8 @@ import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import { BrowserRouter } from "react-router-dom"
+
 
 // Import local files
 //
@@ -55,6 +57,10 @@ const logger = store => {
 const store = createStore(rootReducer, compose(applyMiddleware(logger, thunk)));
 
 ReactDOM.render(
-    <Provider store={store}><PageDisplay /></Provider>,
+    <Provider store={store}>
+        <BrowserRouter basename="/app/">
+            <PageDisplay />
+        </BrowserRouter>
+    </Provider>,
     document.getElementById("hello-react")
 )

@@ -1,1 +1,16 @@
 /* This file is for your main application css. */
+
+.no-resize {
+    resize: none;
+}
+
+.comments {
+    padding: 0;
+}
+
+.comment {
+    list-style: none;
+    
+    margin: 20px 0px;
+
+}

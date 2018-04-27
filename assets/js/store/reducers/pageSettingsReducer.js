@@ -2,9 +2,9 @@ import * as actionTypes from '../actions/actionTypes'
 import { expandObject } from '../../utility'
 
 const initialState = {
-    allowUnauthenticatedComment: false,
-    allowUnauthenticatedList: false,
-    allowUnanthenticatedResponse: false
+    allowAnonymousComments: false,
+    allowAnonymousView: false,
+    commentSizeLimit: 1000
 }
 
 const pageSettingsReducer = (state = initialState, action) => {
