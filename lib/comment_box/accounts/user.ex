@@ -1,6 +1,7 @@
 defmodule CommentBox.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Comeonin.Bcrypt
 
 
   schema "users" do
@@ -12,6 +13,7 @@ defmodule CommentBox.Accounts.User do
     field :reputation, :integer
 
     field :password, :string, virtual: true
+    field :password_confirmation, :string, virtual: true
 
     timestamps()
   end
@@ -19,8 +21,17 @@ defmodule CommentBox.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :username, :email, :password_hash, :account_status])
-    |> validate_required([:name, :username, :email, :password_hash, :account_status])
-    |> unique_constraint(:username)
+    |> cast(attrs, [:name, :username, :email, :password, :password_confirmation])
+    |> validate_required([:username, :email, :password, :password_confirmation])
+    |> validate_confirmation(:password, message: "Password does not match")
+    |> unique_constraint(:username, message: "Username already in use")
+    |> unique_constraint(:email, message: "Email already in use")
+    |> put_pass_hash()
+    
   end
+
+  defp put_pass_hash(%Ecto.Changeset{valid?: true, changes: %{password: password}} = changeset) do
+    change(changeset, password_hash: Bcrypt.hashpwsalt(password))
+  end
+  defp put_pass_hash(changeset), do: changeset
 end

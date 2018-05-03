@@ -5,9 +5,14 @@ import { connect } from "react-redux";
 
 import CommentBox from '../components/comments/commentBox'
 import ComentList from './comments/commentList'
+import Anonymous from './user/anonymous'
+import Authenticated from './user/authenticated'
+
 import * as pageActions from '../store/actions/pageSettingsActions'
 import * as commentActions from '../store/actions/commentActions'
 import socket from '../socket'
+
+console.log(Anonymous)
 
 class PageDisplay extends Component {
     componentDidMount() {
@@ -42,9 +47,19 @@ class PageDisplay extends Component {
     render() {
         return (
             <div>
-                { !this.props.settings.allowAnonymousComment ? <Route path="" component={CommentBox} /> : <div>Not allowed to comment</div> }
+                { !this.props.user.isAuthenticated 
+                    ? <Anonymous />
+                    : <Authenticated />
+                }
+                { this.props.user.isAuthenticated || this.props.settings.allowAnonymousComment
+                    ? <Route path="" component={CommentBox} /> 
+                    : <div className="text-center alert alert-info">The owner of this page disabled anonymous comments</div> 
+                }
                 <hr />
-                { this.props.settings.allowAnonymousView ? <Route path="" component={ComentList} /> : <div>Not allowed to view comments</div> }
+                { this.props.user.isAuthenticated || this.props.settings.allowAnonymousView 
+                    ? <Route path="" component={ComentList} /> 
+                    : <div>Not allowed to view comments</div> 
+                }
             </div>
         )
     }
@@ -52,7 +67,8 @@ class PageDisplay extends Component {
 
 const mapStateToProps = state => {
     return {
-        settings: state.pageSettings
+        settings: state.pageSettings,
+        user: state.user
     }
 };
 

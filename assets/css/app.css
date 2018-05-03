@@ -14,3 +14,11 @@
     margin: 20px 0px;
 
 }
+
+a {
+    cursor: pointer;
+}
+
+input.error {
+    border: red 1px solid;
+}

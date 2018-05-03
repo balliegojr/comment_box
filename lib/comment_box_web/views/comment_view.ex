@@ -16,7 +16,16 @@ defmodule CommentBoxWeb.CommentView do
       content: comment.content,
       status: comment.status,
 
-      inserted_at: comment.inserted_at
+      inserted_at: comment.inserted_at,
+      user: render_user(comment.user)
+    }
+  end
+
+  defp render_user(nil), do: nil
+  defp render_user(user) do 
+    %{
+      id: user.id,
+      username: user.username
     }
   end
 end

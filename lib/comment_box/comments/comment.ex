@@ -2,14 +2,18 @@ defmodule CommentBox.Comments.Comment do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias CommentBox.Accounts.User
+
 
   schema "comments" do
     field :content, :string
     field :status, :integer
-    field :user_id, :id
+    # field :user_id, :id
     field :page_id, :id
     field :reply_to, :id
     field :reputation, :integer
+
+    belongs_to :user, User
 
     timestamps()
   end

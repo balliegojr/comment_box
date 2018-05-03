@@ -15,8 +15,8 @@ import "phoenix_html"
 import React from "react"
 import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import thunk from 'redux-thunk'
 import { BrowserRouter } from "react-router-dom"
 
 
@@ -27,8 +27,10 @@ import { BrowserRouter } from "react-router-dom"
 
 import socket from "./socket"
 import commentsReducer from './store/reducers/commentsReducer'
-import pageSettingsReducer from "./store/reducers/pageSettingsReducer";
-import PageDisplay from './containers/pageDisplay'
+import pageSettingsReducer from "./store/reducers/pageSettingsReducer"
+import usersReducer from './store/reducers/usersReducer'
+
+import PageDisplay from './components/pageDisplay'
 /*
     Load page details
         show comments if user authenticated or page allows to unauthenticated
@@ -40,7 +42,8 @@ import PageDisplay from './containers/pageDisplay'
 
 const rootReducer = combineReducers({
     pageSettings: pageSettingsReducer,
-    comments: commentsReducer
+    comments: commentsReducer,
+    user: usersReducer
 });
 
 const logger = store => {

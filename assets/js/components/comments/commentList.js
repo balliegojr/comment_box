@@ -1,5 +1,5 @@
 import React from "react";
-import { Comment } from "../../components/comments/comment";
+import Comment from "./comment";
 import * as commentActions from "../../store/actions/commentActions";
 import { connect } from "react-redux";
 

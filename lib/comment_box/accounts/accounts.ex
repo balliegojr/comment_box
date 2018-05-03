@@ -101,4 +101,22 @@ defmodule CommentBox.Accounts do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+
+  def find_by_username(username) do
+    Repo.get_by(User, username: username)
+
+  end
+
+  def authenticate(%{user: user, password: password}) do
+    # Does password match the one stored in the database?
+    case Comeonin.Bcrypt.checkpw(password, user.password_hash) do
+      true ->
+        # Yes, create and return the token
+        CommentBox.Auth.Guardian.encode_and_sign(user)
+      _ ->
+        # No, return an error
+        {:error, :unauthorized}
+    end
+  end
 end

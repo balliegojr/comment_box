@@ -7,6 +7,7 @@ defmodule CommentBox.Comments do
   alias CommentBox.Repo
 
   alias CommentBox.Comments.Page
+  alias CommentBox.Accounts.User
 
   @doc """
   Returns the list of pages.
@@ -130,6 +131,7 @@ defmodule CommentBox.Comments do
 
   def list_comment_by_page(page_id) do
     query = from c in Comment, 
+        preload: [:user],
         where: c.page_id == ^page_id,
         order_by: [desc: c.inserted_at],
         select: c
@@ -177,7 +179,7 @@ defmodule CommentBox.Comments do
 
     {:ok, comment}
   end
-  defp notify_comment_to({:error, %Comment{} = changeset}, message), do: {:error, changeset}
+  defp notify_comment_to({:error, changeset}, message), do: {:error, changeset}
 
   @doc """
   Updates a comment.
