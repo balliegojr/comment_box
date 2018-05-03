@@ -1,40 +1,45 @@
 import * as actionTypes from './actionTypes'
-import axios from 'axios';
+import * as userService from '../../services/userService';
 
-export const setAuthToken = (token) => {
+const setAuthToken = (token) => {
     return {
         type: actionTypes.SET_AUTH_TOKEN,
         payload: token
     }
 }
 
-export const setUser = (userInfo) => {
+const setUser = (userInfo) => {
     return {
         type: actionTypes.SET_USER,
         payload: userInfo
     }
 }
 
-export const loadCurrentUserInfo = () => (dispatch) => {
-    return axios.get("/api/auth/me")
+export const setTokenAndLoadUser = (access_token) => (dispatch) => {
+    dispatch(setAuthToken(access_token));
+
+    userService.currentUser()
         .then((userInfo) => {
             dispatch(setUser(userInfo.data));
         });
 }
 
 export const signin = (signinInfo) => (dispatch) => {
-    return axios.post("/api/auth/signin", { user: signinInfo })
-        .then((tokenData) => {
-            dispatch(setAuthToken(tokenData.data.access_token));
-
-            axios.defaults.headers.common['Authorization'] = `Bearer ${tokenData.data.access_token}`;
-            dispatch(loadCurrentUserInfo());
+    return userService.signin(signinInfo.username, signinInfo.password)
+        .then((access_token) => {
+            dispatch(setTokenAndLoadUser(access_token));
         });
 }
 
 export const signup = (userInfo) => (dispatch) => {
-    return axios.post("/api/user", { user: userInfo })
-        .then((tokenData) => {
-            dispatch(setAuthToken(tokenData.data));
+    return userService.signup(userInfo)
+        .then((access_token) => {
+            dispatch(setTokenAndLoadUser(access_token));
         });
+}
+
+export const signout = () => {
+    return {
+        type: actionTypes.CLEAR_USER_DATA,
+    }
 }

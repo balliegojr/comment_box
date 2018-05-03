@@ -25,20 +25,17 @@ import { BrowserRouter } from "react-router-dom"
 // Local files can be imported directly using relative
 // paths "./socket" or full ones "web/static/js/socket".
 
-import socket from "./socket"
+import * as socketService from "./services/socketService";
 import commentsReducer from './store/reducers/commentsReducer'
 import pageSettingsReducer from "./store/reducers/pageSettingsReducer"
 import usersReducer from './store/reducers/usersReducer'
 
-import PageDisplay from './components/pageDisplay'
-/*
-    Load page details
-        show comments if user authenticated or page allows to unauthenticated
-        show comment box if user authenticated or page allow unauthenticated comment
+import * as userActions from './store/actions/userActions';
+import * as userService from './services/userService';
 
-        show signin button if user is not authenticated
-        show signup button if user is not authenticated
-*/
+import PageDisplay from './components/pageDisplay'
+
+socketService.connect();
 
 const rootReducer = combineReducers({
     pageSettings: pageSettingsReducer,
@@ -67,3 +64,8 @@ ReactDOM.render(
     </Provider>,
     document.getElementById("hello-react")
 )
+
+
+if (userService.hasToken()) {
+    store.dispatch(userActions.setTokenAndLoadUser(userService.getToken()));
+}

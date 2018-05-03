@@ -20,9 +20,13 @@ class CommentList extends React.Component {
 
         const comments = this.props.comments.loadedComments.map((comment) => (<Comment key={comment.id} comment={comment} />))
         return (
-            <ul className="comments">
-                {comments}
-            </ul>
+            <div>
+                <span> Comments: {comments.length}</span>
+                <hr/>
+                <ul className="comments">
+                    {comments}
+                </ul>
+            </div>
         )
     }
     

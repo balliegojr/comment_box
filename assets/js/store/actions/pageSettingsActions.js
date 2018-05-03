@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes'
-import axios from 'axios';
+import { getPageSettings } from '../../services/pageSettingsService'
 
 export const setLoadingPageSettings = (isLoading) => {
     return {
@@ -25,7 +25,7 @@ export const setPageSettingsError = (reason) => {
 export const loadPageSettings = () => dispatch => {
     dispatch(setLoadingPageSettings(true));
     
-    return axios.get("/api/page")
+    return getPageSettings()
         .then(pageSettings => {
             dispatch(setPageSettings(pageSettings.data))
         }, reason => dispatch(setPageSettingsError(reason)));

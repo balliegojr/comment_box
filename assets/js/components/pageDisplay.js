@@ -10,9 +10,7 @@ import Authenticated from './user/authenticated'
 
 import * as pageActions from '../store/actions/pageSettingsActions'
 import * as commentActions from '../store/actions/commentActions'
-import socket from '../socket'
-
-console.log(Anonymous)
+import * as socketService from '../services/socketService'
 
 class PageDisplay extends Component {
     componentDidMount() {
@@ -21,44 +19,50 @@ class PageDisplay extends Component {
 
     componentWillReceiveProps(props) {
         if (this.props.settings.id !== props.settings.id){
+            
+            const page_id = this.props.settings.id;
+            socketService.leave(`page:${page_id}`);
+            
             this.joinChannel(props.settings.id);
         }
     }
 
     componentWillUnmount() {
-        if (this.channel) {
-            this.channel.leave();
-        }
+        delete this.channel;
+
+        const page_id = this.props.settings.id;
+        socketService.leave(`page:${page_id}`);
     }
 
-
     joinChannel(page_id) {
-        if (this.channel) {
-            this.channel.leave();
-        }
-
-        this.channel = socket.channel(`page:${page_id}`);
+        this.channel = socketService.channel(`page:${page_id}`);
         this.channel.on("comment_new", payload => this.props.onAddNewComment(payload));
         this.channel.on("comment_updated", payload => this.props.onUpdateComment(payload));
-
-        this.channel.join();
     }
 
     render() {
+        
+        const commentBoxSection = this.props.user.isAuthenticated || this.props.settings.allowAnonymousComment
+            ? <Route path="" component={CommentBox} />
+            : <div className="text-center alert alert-info">The owner of this page disabled anonymous comments</div> 
+            
+        const commentsSection = this.props.user.isAuthenticated || this.props.settings.allowAnonymousView
+            ? <Route path="" component={ComentList} />
+            : <div>Not allowed to view comments</div>
+        
         return (
             <div>
                 { !this.props.user.isAuthenticated 
                     ? <Anonymous />
                     : <Authenticated />
                 }
-                { this.props.user.isAuthenticated || this.props.settings.allowAnonymousComment
-                    ? <Route path="" component={CommentBox} /> 
-                    : <div className="text-center alert alert-info">The owner of this page disabled anonymous comments</div> 
-                }
-                <hr />
-                { this.props.user.isAuthenticated || this.props.settings.allowAnonymousView 
-                    ? <Route path="" component={ComentList} /> 
-                    : <div>Not allowed to view comments</div> 
+
+                { !this.props.settings.isLoaded ? 
+                    <span className="text-center"> loading ... </span> :  
+                    <div>
+                        {commentBoxSection}
+                        {commentsSection}
+                    </div>
                 }
             </div>
         )

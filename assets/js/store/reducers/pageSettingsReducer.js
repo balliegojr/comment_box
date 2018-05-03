@@ -12,7 +12,7 @@ const pageSettingsReducer = (state = initialState, action) => {
         case actionTypes.LOADING_PAGESETTINGS:
             return expandObject(state, { isLoading: action.payload });
         case actionTypes.SET_PAGESETTINGS:
-            const payload = expandObject(action.payload, { isLoading: false });
+            const payload = expandObject(action.payload, { isLoading: false, isLoaded: true });
             return expandObject(state, payload);
     }
 

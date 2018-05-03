@@ -10,3 +10,4 @@ export const SET_PAGESETTINGS_ERROR = 'SET_PAGESETTINGS_ERROR';
 
 export const SET_AUTH_TOKEN = 'SET_AUTH_TOKEN';
 export const SET_USER = 'SET_USER';
+export const CLEAR_USER_DATA = 'CLEAR_USER_DATA';

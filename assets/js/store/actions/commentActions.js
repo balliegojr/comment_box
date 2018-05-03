@@ -1,6 +1,6 @@
 import * as actionTypes from './actionTypes'
-import axios from 'axios';
 import { expandObject } from '../../utility';
+import { savePageComment, getPageComments } from '../../services/commentService';
 
 export const setLoadingComments = (isLoading) => {
     return { type: actionTypes.LOADING_COMMENTS, payload: false };
@@ -24,7 +24,8 @@ export const setCommentsError = (reason) => {
 export const loadComments = () => (dispatch, getStore) => {
     const page_id = getStore().pageSettings.id;
     dispatch(setLoadingComments(true));
-    axios.get(`/api/page/${page_id}/comment`)
+    
+    getPageComments(page_id)
         .then(comments => {
             dispatch(setComments(comments.data))
         }, reason => dispatch(setCommentsError(reason)));
@@ -41,7 +42,7 @@ export const appendComment = (comment) => {
 export const saveComment = (comment) => (dispatch, getStore) => {
     const page_id = getStore().pageSettings.id;
     
-    return axios.post("/api/comment", { comment: expandObject(comment, { page_id: page_id, status: 0 })})
+    return savePageComment(expandObject(comment, { page_id: page_id, status: 0 }))
         .then(theComment => {
             dispatch(appendComment(theComment.data));
         });
