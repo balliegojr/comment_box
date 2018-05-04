@@ -29,19 +29,19 @@ export function signin(username, password) {
                 // setToken(tokenData.data.access_token);
                 // setHeader(tokenData.data.access_token);
                 resolve(tokenData.data.access_token);
-            }, reject);
+            }, (reason) => reject(reason.response.data));
 
     })
 }
 
-export function signup() {
+export function signup(userInfo) {
     return new Promise((resolve, reject) =>{
         axios.post("/api/user", { user: userInfo })
             .then((tokenData) => {
                 // setToken(tokenData.data.access_token);
                 // setHeader(tokenData.data.access_token);
                 resolve(tokenData.data.access_token);
-            }, reject);
+            }, (reason) => reject(reason.response.data));
     });
 }
 

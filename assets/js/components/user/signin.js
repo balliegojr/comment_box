@@ -1,8 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
+import ValidationComponent from '../validationComponent'
 import { connect } from 'react-redux'
 import * as userActions from '../../store/actions/userActions'
 
-class Signin extends Component {
+class Signin extends ValidationComponent {
     constructor(props) {
         super(props);
 
@@ -11,6 +12,8 @@ class Signin extends Component {
             username: "",
             password: ""
         }
+
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleSubmit(ev) {
@@ -21,43 +24,44 @@ class Signin extends Component {
             password: this.state.password
         }
 
-        this.setState({ sending: true });
+        this.setState({ sending: true, error_message: null });
         this.props.doSignin(signInInfo)
             .then(() => {
 
             }, (reason) => {
-                this.setState({ sending: false });
-                console.log(reason);
+                this.setState({ sending: false, error_message:reason.error });
+                
             });
     }
 
-    handleUsernameChange(ev) {
-        this.setState({ username: ev.target.value });
-    }
-
-    handlePasswordChange(ev) {
-        this.setState({ password: ev.target.value });
+    handleChange(ev) {
+        const { name, value } = ev.target;
+        this.setState({[name]: value});
     }
 
     render() {
         return (
-            <form onSubmit={(ev) => this.handleSubmit(ev)} disabled={this.state.sending}>
+            <form onSubmit={(ev) => this.handleSubmit(ev)}>
                 <div className="row form-group">
 
-                    <div className="col-md-6">
-                        <input className="form-control" type="text" placeholder="Username" value={this.state.username} onChange={(ev) => this.handleUsernameChange(ev)} />
+                    <div className="col-xs-6">
+                        <input className="form-control" type="text" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} required />
+                        <label className="error-message" id="username" htmlFor="username"></label>
                     </div>
-                    <div className="col-md-6">
-                        <input className="form-control" type="password" placeholder="Password" value={this.state.password} onChange={(ev) => this.handlePasswordChange(ev)} />
+                    <div className="col-xs-6">
+                        <input className="form-control" id="password" type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} required />
+                        <label className="error-message" htmlFor="password"></label>
                     </div>
                 </div>
 
                 <div className="row">
-                    <div className="col-md-12 text-right">
-                        <button type="submit" className="btn btn-default" disabled={!this.state.username || !this.state.password}>Sign in</button>
+                    <div className="col-xs-8 ">
+                        <label className="error-message">{this.state.error_message}</label>
+                    </div>
+                    <div className="col-xs-4 text-right">
+                        <button type="submit" className="btn btn-default" disabled={this.state.sending}>Sign in</button>
                     </div>
                 </div>
-
             </form>
         )
     }

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>This is an awesome example</title>
+    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <main role="main">
+        <div class="jumbotron">
+            <h1> This is an awesome example</h1>
+            <p>There will be bunch of content in this page</p>
+            <p>Of course there will be a comment section!!!</p>
+        </div>
+
+        <div class="container">
+            <iframe src="/app" width="100%" height="400" allowtransparency="true" frameborder="0" scrolling="no" tabindex="0" style="width: 1px !important; min-width: 100% !important; border: none !important; overflow: hidden !important; height: 5096px !important;" horizontalscrolling="no" verticalscrolling="no"></iframe>
+            <%# <iframe id="dsq-app644" name="dsq-app644"  title="Disqus" width="100%" src="https://disqus.com/embed/comments/?base=default&amp;f=gizmodobr&amp;t_i=248293%20http%3A%2F%2Fgizmodo.uol.com.br%2F%3Fp%3D248293&amp;t_u=http%3A%2F%2Fgizmodo.uol.com.br%2Ftim-messenger-whatsapp-franquia-dados%2F&amp;t_e=A%20TIM%20vai%20oferecer%20liga%C3%A7%C3%B5es%20por%20Messenger%20e%20WhatsApp%20sem%20gastar%20a%20franquia%20de%20dados&amp;t_d=A%20TIM%20vai%20oferecer%20liga%C3%A7%C3%B5es%20por%20Messenger%20e%20WhatsApp%20sem%20gastar%20a%20franquia%20de%20dados&amp;t_t=A%20TIM%20vai%20oferecer%20liga%C3%A7%C3%B5es%20por%20Messenger%20e%20WhatsApp%20sem%20gastar%20a%20franquia%20de%20dados&amp;s_o=default#version=3a153681e8d91dee2860bdf5f56e28f6" ></iframe>        </div> %>
+
+      </main>
+
+    </div> <!-- /container -->
+    
+  </body>
+</html>

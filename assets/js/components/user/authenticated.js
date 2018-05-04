@@ -9,10 +9,10 @@ class Authenticated extends Component {
     render() {
         return (
             <div className="row">
-                <div className="col-md-6">
+                <div className="col-xs-6">
                     <b>{this.props.user ? this.props.user.username : ""}</b>
                 </div>
-                <div className="col-md-6 text-right">
+                <div className="col-xs-6 text-right">
                     <a onClick={() => this.handleSignOut()}>Sign out</a>
                 </div>
             </div>

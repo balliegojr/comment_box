@@ -25,7 +25,7 @@ class Anonymous extends Component {
     render() {
         return (
             <div>
-                <div className="text-center alert alert-warning"> You are not authenticated, please <a onClick={() => this.handleToggleSignin(!this.state.showSignin)}>signin</a> or <a onClick={() => this.handleToggleSignup(!this.state.showSignup)} >signup</a> 
+                <div className="text-center alert alert-warning"> You are not authenticated, please <a onClick={() => this.handleToggleSignin(!this.state.showSignin)}>sign in</a> or <a onClick={() => this.handleToggleSignup(!this.state.showSignup)} >sign up</a> 
                 </div>
                 {this.state.showSignin ? <Signin /> : "" }
                 {this.state.showSignup ? <Signup /> : "" }

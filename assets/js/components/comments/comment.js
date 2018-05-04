@@ -8,15 +8,15 @@ export default class Comment extends React.Component {
         return (
             <li className="comment">
                 <div className="row">
-                    <div className="col-md-6">
-                        <span></span> <small> <b> {this.props.comment.user ? this.props.comment.user.username : "Anonymous"} </b></small>
-                    </div>
-                    <div className="col-md-6 text-right">
-                        <small title={ comment_time.format('L LT') }>{ comment_time.fromNow() }</small>
+                    <div className="col-xs-12">
+                        <small> <b> {this.props.comment.user ? this.props.comment.user.username : "Anonymous"} </b></small>
+                        <span> - </span>
+                        <small title={comment_time.format('L LT')}>{comment_time.fromNow()}</small>
+                         
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-xs-12">
                         <pre>
                             { this.props.comment.content }
                         </pre>

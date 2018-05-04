@@ -32,7 +32,7 @@ defmodule CommentBoxWeb.UserController do
             {:ok, token, _claims} -> conn
                         |> put_resp_header("authorization", "Bearer #{token}")
                         |> json(%{access_token: token}) # Return token to the client
-            {:error, _} -> conn |> put_status(:unauthorized) |> json(%{error: "Username or password invalid"})
+            {:error, _} -> conn |> put_status(:unauthorized) |> json(%{error: "Username or password are invalid"})
         end
     end
 

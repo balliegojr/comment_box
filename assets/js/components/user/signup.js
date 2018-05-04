@@ -1,9 +1,11 @@
-import React, { Component } from 'react'
-
+import React from 'react'
+import ValidationComponent from '../validationComponent'
 import { connect } from 'react-redux'
 import * as userActions from '../../store/actions/userActions'
 
-class SignUp extends Component {
+
+
+class SignUp extends ValidationComponent {
     constructor(props) {
         super(props);
 
@@ -14,10 +16,16 @@ class SignUp extends Component {
             email: "",
             password_confirmation: ""
         }
+
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleSubmit(ev) {
         ev.preventDefault();
+
+        if (!this.validateForm(this.refs.form)){
+            return;
+        }
 
         const userInfo = {
             email: this.state.email,
@@ -32,64 +40,60 @@ class SignUp extends Component {
 
             }, (reason) => {
                 this.setState({ sending: false });
-                console.log(reason);
+                if (reason.errors) {
+                    for (let target in reason.errors) {
+                        this.setError(this.refs.form, target, reason.errors[target]);
+                    }
+                }
             });
     }
 
-    handleUsernameChange(ev) {
-        this.setState({ username: ev.target.value });
-    }
-
-    handleEmailChange(ev) {
-        this.setState({ email: ev.target.value });
-    }
-
-    handlePasswordChange(ev) {
-        this.setState({ password: ev.target.value });
-    }
-
-    handlePasswordConfirmationChange(ev) {
-        this.setState({ password_confirmation: ev.target.value });
-    }
-
-    validateForm() {
-        return (
-            !this.state.sending
-            && this.state.username
-            && this.state.email
-            && this.state.password.length >= 6
-            && this.state.password === this.state.password_confirmation
-        )
+    handleChange(ev) {
+        const { name, value } = ev.target;
+        this.setState({ [name]: value});
     }
 
     render() {
-        const submitEnabled = this.validateForm();
-
         return (
-            <form onSubmit={(ev) => this.handleSubmit(ev)} disabled={this.state.sending}>
+            <form onSubmit={(ev) => this.handleSubmit(ev)} disabled={this.state.sending} ref="form">
                 <div className="row form-group">
 
-                    <div className="col-md-6">
-                        <input className="form-control" type="text" placeholder="Username" value={this.state.username} onChange={(ev) => this.handleUsernameChange(ev)} />
+                    <div className="col-xs-6">
+                        <input 
+                            className="form-control" 
+                            type="text" 
+                            placeholder="Username" 
+                            id="username"
+                            name="username" 
+                            value={this.state.username} 
+                            onChange={this.handleChange}
+                            onBlur={this.validateField} 
+                            required="true"
+                            minLength="3"
+                            validate="true" />
+                        <label className="error-message" htmlFor="username"></label>
+
                     </div>
-                    <div className="col-md-6">
-                        <input className="form-control" type="email" placeholder="Email" value={this.state.email} onChange={(ev) => this.handleEmailChange(ev)} />
+                    <div className="col-xs-6">
+                        <input id="email" className="form-control" type="email" placeholder="Email" name="email" value={this.state.email} onChange={this.handleChange} onBlur={this.validateField} required />
+                        <label className="error-message" htmlFor="email"></label>
                     </div>
                 </div>
 
                 <div className="row form-group">
-
-                    <div className="col-md-6">
-                        <input className="form-control" type="password" placeholder="Password" value={this.state.password} onChange={(ev) => this.handlePasswordChange(ev)} />
+                    <div className="col-xs-6">
+                        <input id="password"className="form-control" type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handleChange} onBlur={this.validateField} required minLength="6" />
+                        <label className="error-message" htmlFor="password"></label>
                     </div>
-                    <div className="col-md-6">
-                        <input className="form-control" type="password" placeholder="Password Confirmation" value={this.state.password_confirmation} onChange={(ev) => this.handlePasswordConfirmationChange(ev)} />
+                    <div className="col-xs-6">
+                        <input id="password_confirmation" className="form-control" type="password" placeholder="Password Confirmation" name="password_confirmation" value={this.state.password_confirmation} onBlur={this.validateField} onChange={this.handleChange} required minLength="6" match="password" />
+                        <label className="error-message" htmlFor="password_confirmation"></label>
                     </div>
                 </div>
 
                 <div className="row">
-                    <div className="col-md-12 text-right">
-                        <button type="submit" className="btn btn-default" disabled={!submitEnabled}>Sign up</button>
+                    <div className="col-xs-12 text-right">
+                        <button type="submit" className="btn btn-default">Sign up</button>
                     </div>
                 </div>
 
