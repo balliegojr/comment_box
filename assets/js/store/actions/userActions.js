@@ -21,6 +21,9 @@ export const setTokenAndLoadUser = (access_token) => (dispatch) => {
     userService.currentUser()
         .then((userInfo) => {
             dispatch(setUser(userInfo.data));
+        }, (reason) => {
+            // user probably don't exist
+            dispatch(signout());
         });
 }
 

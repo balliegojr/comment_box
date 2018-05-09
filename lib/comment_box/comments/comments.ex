@@ -126,7 +126,7 @@ defmodule CommentBox.Comments do
 
   """
   def list_comment do
-    Repo.all(Comment)
+    Repo.all(Comment) |> Repo.preload(:user)
   end
 
   def list_comment_by_page(page_id) do
@@ -153,7 +153,10 @@ defmodule CommentBox.Comments do
       ** (Ecto.NoResultsError)
 
   """
-  def get_comment!(id), do: Repo.get!(Comment, id)
+  def get_comment!(id) do
+     Repo.get!(Comment, id) |> Repo.preload(:user)
+
+  end
 
   @doc """
   Creates a comment.

@@ -25,7 +25,7 @@ defmodule CommentBoxWeb.UserController do
     def sign_in(conn, %{"user" => user_info}) do
         response = case Accounts.find_by_username(user_info["username"]) do
             nil -> {:error, :unauthorized}
-            user -> Accounts.authenticate(%{user: user, password: user_info["password"]})
+            user -> Accounts.authenticate(user, user_info["password"])
         end
 
         case response do

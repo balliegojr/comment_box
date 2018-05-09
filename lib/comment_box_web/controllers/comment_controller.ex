@@ -28,10 +28,10 @@ defmodule CommentBoxWeb.CommentController do
   def create(conn, %{"comment" => comment_params}) do
     with {:ok, %Comment{} = comment} <- Comments.create_comment(Map.put(comment_params, "user_id", user_id(conn))) do
       notify_comment_to(comment, "comment_new")      
-      
+
       conn
       |> put_status(:created)
-      |> put_resp_header("location", comment_path(conn, :show, comment))
+      # |> put_resp_header("location", comment_path(conn, :show, comment))
       |> render("show.json", comment: comment)
     end
   end

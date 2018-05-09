@@ -20,6 +20,7 @@ defmodule CommentBoxWeb.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
       import CommentBoxWeb.Router.Helpers
+      import CommentBoxWeb.AuthenticateHelper
 
       # The default endpoint for testing
       @endpoint CommentBoxWeb.Endpoint

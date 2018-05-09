@@ -108,7 +108,7 @@ defmodule CommentBox.Accounts do
 
   end
 
-  def authenticate(%{user: user, password: password}) do
+  def authenticate(user, password) do
     # Does password match the one stored in the database?
     case Comeonin.Bcrypt.checkpw(password, user.password_hash) do
       true ->
