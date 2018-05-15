@@ -56,3 +56,5 @@ config :comment_box, CommentBox.Repo,
   database: "comment_box_dev",
   hostname: "localhost",
   pool_size: 10
+
+import_config "dev.secret.exs"
