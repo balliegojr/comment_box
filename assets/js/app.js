@@ -7,6 +7,8 @@
 // in vendor, which are never wrapped in imports and
 // therefore are always executed.
 
+import css from '../css/app.css';
+
 // Import dependencies
 //
 // If you no longer want to use a dependency, remember
@@ -55,8 +57,8 @@ function initOn(targetDiv) {
         }
     };
     
-    const store = createStore(rootReducer, compose(applyMiddleware(logger, thunk)));
-    // const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
+    // const store = createStore(rootReducer, compose(applyMiddleware(logger, thunk)));
+    const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
     
     ReactDOM.render(
         <Provider store={store}>
