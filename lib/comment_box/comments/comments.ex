@@ -173,6 +173,7 @@ defmodule CommentBox.Comments do
   def create_comment(attrs \\ %{}) do
     with {:ok, comment} <- %Comment{} |> Comment.changeset(attrs) |> Repo.insert() do
         comment = Repo.preload(comment, :user)
+        CommentBox.Nlp.sentment_analysis(comment)
         {:ok, comment}
     end
   end

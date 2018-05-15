@@ -44,6 +44,8 @@ defmodule CommentBox.Mixfile do
       {:guardian, "~> 1.0.1"},
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
+      {:httpoison, "~> 1.0"},
+      {:distillery, "~> 1.5", runtime: false}
     ]
   end
 

@@ -16,8 +16,7 @@ const addComment = (state, comment) => {
 }
 
 const updateComment = (state, comment) => {
-    const comments = state.loadedComments.filter(c => c.id !== comment.id ? c : comment);
-
+    const comments = state.loadedComments.map(c => c.id !== comment.id ? c : expandObject(c, comment));
     return expandObject(state, { loadedComments: comments });
 }
 

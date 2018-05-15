@@ -26,6 +26,11 @@ config :comment_box, CommentBox.Auth.Guardian,
   issuer: "comment_box",
   secret_key: "dxGFAvd4m8cn58nGfNweQiEifcZIjl3Ce89pwOgCY8UzfIGviEU6abdP2HufVsPZ"
 
+config :comment_box, CommentBox.Nlp.Aylien,
+  app_id: "66116504",
+  secret_key: "3ae2fba8f9d948a0730b3da525163645",
+  endpoint: "https://api.aylien.com/api/v1/"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

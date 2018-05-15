@@ -35,37 +35,41 @@ import * as userService from './services/userService';
 
 import PageDisplay from './components/pageDisplay'
 
-socketService.connect();
-
-const rootReducer = combineReducers({
-    pageSettings: pageSettingsReducer,
-    comments: commentsReducer,
-    user: usersReducer
-});
-
-const logger = store => {
-    return next => {
-        return action => {
-            console.log('[Middleware] Dispatching', action);
-            const result = next(action);
-            console.log('[Middleware] next state', store.getState());
-            return result;
+function initOn(targetDiv) {
+    socketService.connect();
+    
+    const rootReducer = combineReducers({
+        pageSettings: pageSettingsReducer,
+        comments: commentsReducer,
+        user: usersReducer
+    });
+    
+    const logger = store => {
+        return next => {
+            return action => {
+                console.log('[Middleware] Dispatching', action);
+                const result = next(action);
+                console.log('[Middleware] next state', store.getState());
+                return result;
+            }
         }
+    };
+    
+    const store = createStore(rootReducer, compose(applyMiddleware(logger, thunk)));
+    // const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
+    
+    ReactDOM.render(
+        <Provider store={store}>
+            <BrowserRouter basename="/app/">
+                <PageDisplay />
+            </BrowserRouter>
+        </Provider>,
+        document.getElementById(targetDiv)
+    )
+    
+    
+    if (userService.hasToken()) {
+        store.dispatch(userActions.setTokenAndLoadUser(userService.getToken()));
     }
-};
-
-const store = createStore(rootReducer, compose(applyMiddleware(logger, thunk)));
-
-ReactDOM.render(
-    <Provider store={store}>
-        <BrowserRouter basename="/app/">
-            <PageDisplay />
-        </BrowserRouter>
-    </Provider>,
-    document.getElementById("hello-react")
-)
-
-
-if (userService.hasToken()) {
-    store.dispatch(userActions.setTokenAndLoadUser(userService.getToken()));
 }
+initOn('hello-react');

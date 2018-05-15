@@ -16,6 +16,9 @@ defmodule CommentBoxWeb.CommentView do
       content: comment.content,
       status: comment.status,
 
+      polarity: comment.sentiment_polarity,
+      polarity_confidence: comment.sentiment_confidence,
+
       inserted_at: comment.inserted_at,
       user: render_user(comment.user)
     }

@@ -14,6 +14,7 @@ defmodule CommentBox.Application do
       supervisor(CommentBoxWeb.Endpoint, []),
       # Start your own worker by calling: CommentBox.Worker.start_link(arg1, arg2, arg3)
       # worker(CommentBox.Worker, [arg1, arg2, arg3]),
+      {Task.Supervisor, name: CommentBox.TaskSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -25,6 +25,13 @@
     margin: 0;
 }
 
+.comment.positive pre {
+    color: green;
+}
+
+.comment.negative pre {
+    color: red
+}
 a {
     cursor: pointer;
 }

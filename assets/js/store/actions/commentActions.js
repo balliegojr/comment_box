@@ -39,6 +39,13 @@ export const appendComment = (comment) => {
     }
 }
 
+export const updateComment = (comment) => {
+    return { 
+        type: actionTypes.UPDATE_COMMENT,
+        payload: comment
+    }
+}
+
 export const saveComment = (comment) => (dispatch, getStore) => {
     const page_id = getStore().pageSettings.id;
     
