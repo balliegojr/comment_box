@@ -5,7 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
     entry: {
         app: './js/app.js',
-        embed: './js/embed.js'
+        embed: './js/embed.js',
+        admin: './js/admin.js'
     },
     
     output: {

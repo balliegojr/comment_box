@@ -1,36 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+<div class="jumbotron">
+    <h1> This is an awesome example</h1>
+    <p>There will be bunch of content in this page</p>
+    <p>Of course there will be a comment section!!!</p>
+</div>
 
-    <title>This is an awesome example</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
-  </head>
+<div class="container">
 
-  <body>
-    <div class="container-fluid">
-      <main role="main">
-        <div class="jumbotron">
-            <h1> This is an awesome example</h1>
-            <p>There will be bunch of content in this page</p>
-            <p>Of course there will be a comment section!!!</p>
-        </div>
-
-        <div class="container">
-
-            <%# <iframe src="/app" width="100%" height="400" allowtransparency="true" frameborder="0" scrolling="no" tabindex="0" style="width: 1px !important; min-width: 100% !important; border: none !important; overflow: hidden !important; height: 5096px !important;" horizontalscrolling="no" verticalscrolling="no"></iframe> %>
-        </div>
-
-      </main>
-
-    </div> <!-- /container -->
-    <script src="<%= static_path(@conn, "/js/embed.js") %>"></script>
-    <script>
-      commentbox.load({ target: ".container", client_id: "", app_id: "", url: "/examples/awesome" })
-    </script>
-  </body>
-</html>
+    <%# <iframe src="/app" width="100%" height="400" allowtransparency="true" frameborder="0" scrolling="no" tabindex="0" style="width: 1px !important; min-width: 100% !important; border: none !important; overflow: hidden !important; height: 5096px !important;" horizontalscrolling="no" verticalscrolling="no"></iframe> %>
+</div>
+<script src="<%= static_path(@conn, "/js/embed.js") %>"></script>
+<script>
+  commentbox.load({ target: ".container", client_id: "", app_id: "", url: "/examples/awesome" })
+</script>

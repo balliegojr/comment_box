@@ -2,7 +2,7 @@ defmodule CommentBox.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Comeonin.Bcrypt
-
+  alias CommentBox.Accounts.UserRole
 
   schema "users" do
     field :account_status, :integer
@@ -14,6 +14,8 @@ defmodule CommentBox.Accounts.User do
 
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
+
+    has_many :user_roles, UserRole
 
     timestamps()
   end

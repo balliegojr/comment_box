@@ -9,6 +9,10 @@ defmodule CommentBoxWeb.PageController do
     render conn, "index.html"
   end
 
+  def admin(conn, _params) do
+    render conn, "admin.html"
+  end
+
   def awesome_example(conn, _params) do
     render conn, "awesome.html"
   end

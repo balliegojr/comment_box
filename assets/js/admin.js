@@ -19,6 +19,8 @@ import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
+import { BrowserRouter, Route, Switch } from "react-router-dom"
+
 
 // Import local files
 //
@@ -26,36 +28,48 @@ import thunk from 'redux-thunk'
 // paths "./socket" or full ones "web/static/js/socket".
 
 import * as socketService from "./services/socketService";
-import commentsReducer from './store/reducers/commentsReducer'
-import pageSettingsReducer from "./store/reducers/pageSettingsReducer"
-import usersReducer from './store/reducers/usersReducer'
 
+
+import usersReducer from './store/reducers/usersReducer'
 import * as userActions from './store/actions/userActions';
 import * as userService from './services/userService';
 
-import PageDisplay from './components/pageDisplay';
-import { resize_display, redux_logger } from './utility';
+import AdminHeader from './components/admin/header';
+import { redux_logger } from './utility';
 
 socketService.connect();
 
 const rootReducer = combineReducers({
-    pageSettings: pageSettingsReducer,
-    comments: commentsReducer,
     user: usersReducer
 });
 
-// const store = createStore(rootReducer, compose(applyMiddleware(redux_logger, thunk)));
-const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
+
+const AdminFooter = () => {
+    return (<div> Footer </div>)
+
+}
+
+const store = createStore(rootReducer, compose(applyMiddleware(redux_logger, thunk)));
+// const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
 ReactDOM.render(
     <Provider store={store}>
-        <PageDisplay />
+        <div>
+            <AdminHeader />
+            <BrowserRouter basename="/admin/">
+                <Switch>
+                    <Route path="/users" render={() => (<div>Users page</div>)} />
+                    <Route path="/account" render={() => (<div>Account page</div>)} />
+                    <Route path="/domains" render={() => (<div>Domains page</div>)} />
+                    <Route path="/pages" render={() => (<div>Pages page</div>)} />
+                    <Route path="/comments" render={() => (<div>Comments page</div>)} />
+                    <Route path="/" render={() => (<div>Admin page</div>)} />
+                </Switch>
+            </BrowserRouter>
+            <AdminFooter />
+        </div>
     </Provider>,
     document.getElementById('hello-react')
 )
-
-if (window.parent.commentbox) {
-    resize_display('hello-react', window.parent.commentbox.container);
-}
 
 if (userService.hasToken()) {
     store.dispatch(userActions.setTokenAndLoadUser(userService.getToken()));

@@ -9,11 +9,6 @@ defmodule CommentBoxWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :browser_example do
-    plug :browser
-    plug :put_layout, false
-  end
-
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -63,11 +58,8 @@ defmodule CommentBoxWeb.Router do
 
     get "/", PageController, :index
     get "/app/*routepath", PageController, :app
-  end
 
-  scope "/examples", CommentBoxWeb do
-    pipe_through :browser_example # Use the default browser stack
-
-    get "/awesome", PageController, :awesome_example
+    get "/admin/*routepath", PageController, :admin
+    get "/examples/awesome", PageController, :awesome_example
   end
 end

@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { BrowserRouter, Route } from "react-router-dom"
-
 import { connect } from "react-redux";
 
 import CommentBox from '../components/comments/commentBox'
@@ -43,11 +41,11 @@ class PageDisplay extends Component {
     render() {
         
         const commentBoxSection = this.props.user.isAuthenticated || this.props.settings.allowAnonymousComment
-            ? <Route path="" component={CommentBox} />
+            ? <CommentBox />
             : <div className="text-center alert alert-info">The owner of this page disabled anonymous comments</div> 
             
         const commentsSection = this.props.user.isAuthenticated || this.props.settings.allowAnonymousView
-            ? <Route path="" component={ComentList} />
+            ? <ComentList />
             : <div>Not allowed to view comments</div>
         
         return (
