@@ -26,11 +26,9 @@ import thunk from 'redux-thunk'
 // paths "./socket" or full ones "web/static/js/socket".
 
 import * as socketService from "./services/socketService";
-import commentsReducer from './store/reducers/commentsReducer'
-import pageSettingsReducer from "./store/reducers/pageSettingsReducer"
-import usersReducer from './store/reducers/usersReducer'
+import { authReducer, commentsReducer, pageSettingsReducer } from "./store/reducers";
 
-import * as userActions from './store/actions/userActions';
+import { authActions } from './store/actions';
 import * as userService from './services/userService';
 
 import PageDisplay from './components/pageDisplay';
@@ -41,7 +39,7 @@ socketService.connect();
 const rootReducer = combineReducers({
     pageSettings: pageSettingsReducer,
     comments: commentsReducer,
-    user: usersReducer
+    user: authReducer
 });
 
 // const store = createStore(rootReducer, compose(applyMiddleware(redux_logger, thunk)));
@@ -58,5 +56,5 @@ if (window.parent.commentbox) {
 }
 
 if (userService.hasToken()) {
-    store.dispatch(userActions.setTokenAndLoadUser(userService.getToken()));
+    store.dispatch(authActions.setTokenAndLoadUser(userService.getToken()));
 }

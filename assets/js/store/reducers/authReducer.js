@@ -1,4 +1,4 @@
-import * as actionTypes from '../actions/actionTypes'
+import  { actionTypes } from '../actions'
 import { expandObject } from '../../utility'
 import { getToken, hasToken, setToken, setHeader, clearToken } from '../../services/userService'
 
@@ -22,7 +22,7 @@ const clearUserDataReducer = (state, action) => {
 }
 
 
-const userReducer = (state = initialState, action) => {
+const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_AUTH_TOKEN:
             return setTokenReducer(state, action);
@@ -34,4 +34,4 @@ const userReducer = (state = initialState, action) => {
     return state;
 }
 
-export default userReducer;
+export default authReducer;

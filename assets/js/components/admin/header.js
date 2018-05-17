@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 
 import { Role, Authenticated } from '../authorization'
-import * as userActions from '../../store/actions/userActions'
+import { authActions } from '../../store/actions'
 
 class AdminHeader extends Component {
     handleDropdownToggle(ev) {
@@ -64,7 +64,7 @@ const mapStateToProps = (state) => {
 
 const mapActionsToProps = (dispatch) => {
     return {
-        doSignOut: () => dispatch(userActions.signout())
+        doSignOut: () => dispatch(authActions.signout())
     }
 }
 
