@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import * as userActions from '../../store/actions/userActions'
 
-class Authenticated extends Component {
+class TopContent extends Component {
     handleSignOut() {
         this.props.doSignOut();
     }
@@ -32,4 +32,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Authenticated);
+export default connect(mapStateToProps, mapDispatchToProps)(TopContent);

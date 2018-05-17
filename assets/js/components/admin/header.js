@@ -1,48 +1,71 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link, NavLink } from 'react-router-dom'
 
-import { Role, Authenticated } from "../authorization"
+import { Role, Authenticated } from '../authorization'
+import * as userActions from '../../store/actions/userActions'
 
-const adminHeader = (props) => {
-    return (
-        <nav className="navbar navbar-default">
-            <div className="container-fluid">
-                <div className="navbar-header">
-                    <a className="navbar-brand" href="#">Brand</a>
-                </div>
-                <div className="collapse navbar-collapse">
-                    <ul className="nav navbar-nav navbar-center">
-                        <Role roles={["Admin"]}><li><a href="#">Users</a></li></Role>
-                        <li><a href="#">Pages</a></li>
-                        <li><a href="#">Comments</a></li>
-                    </ul>
+class AdminHeader extends Component {
+    handleDropdownToggle(ev) {
+        if (ev.target.parentElement.classList.contains("open")) {
+            ev.target.parentElement.classList.remove("open");
+        } else {
+            ev.target.parentElement.classList.add("open");
+        }
+    }
 
-                    <Authenticated>
-                        <div className="collapse navbar-collapse">
-                            <ul className="nav navbar-nav navbar-right">
-                                <li className="dropdown">
-                                    <a href="#" className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span className="caret"></span></a>
-                                    <ul className="dropdown-menu">
-                                        <li><a href="#">Action</a></li>
-                                        <li><a href="#">Another action</a></li>
-                                        <li><a href="#">Something else here</a></li>
-                                        <li role="separator" className="divider"></li>
-                                        <li><a href="#">Separated link</a></li>
-                                    </ul>
-                                </li>
+    render() {
+        let userMenu = null;
+        if (this.props.user.isAuthenticated && this.props.user.current) {
+            userMenu = (
+                <div className="collapse navbar-collapse navbar-header  navbar-right">
+                    <ul className="nav navbar-nav ">
+                        <li className="dropdown">
+                            <a className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" onClick={(ev) => this.handleDropdownToggle(ev)}> {this.props.user.current.username} <span className="caret"></span></a>
+                            <ul className="dropdown-menu">
+                                <li><NavLink to="/account" activeClassName="active"> Account </NavLink></li>
+                                <li role="separator" className="divider"></li>
+                                <li><a onClick={this.props.doSignOut}>Log out</a></li>
                             </ul>
-                        </div>
-                    </Authenticated>                   
+                        </li>
+                    </ul>
                 </div>
-            </div>
-        </nav>
-            );
+            )
+        }
+
+
+        return (
+            //navbar-fixed-top
+            <nav className="navbar navbar-default ">
+                <div className="navbar-header navbar-left">
+                    <Link to="/" className="navbar-brand"> Brand </Link>
+                </div>
+                { userMenu }
+                <div className="container">
+                    <div className="collapse navbar-collapse">
+                        <ul className="nav navbar-nav navbar-center">
+                            <Role roles={["Admin"]}><li><NavLink to="/users" activeClassName="active"> Users </NavLink></li></Role>
+                            <li><NavLink to="/pages" activeClassName="active"> Pages </NavLink></li>
+                            <li><NavLink to="/comments" activeClassName="active"> Comments </NavLink></li>
+                        </ul>
+
+                    </div>
+                </div>
+            </nav>
+        );
+    }
 }
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user.current
+        user: state.user
     }
 }
 
-export default connect(mapStateToProps, null)(adminHeader);
+const mapActionsToProps = (dispatch) => {
+    return {
+        doSignOut: () => dispatch(userActions.signout())
+    }
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(AdminHeader);

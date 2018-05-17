@@ -35,6 +35,7 @@ import * as userActions from './store/actions/userActions';
 import * as userService from './services/userService';
 
 import AdminHeader from './components/admin/header';
+import AdminHome from './components/admin/home';
 import { redux_logger } from './utility';
 
 socketService.connect();
@@ -44,29 +45,26 @@ const rootReducer = combineReducers({
 });
 
 
-const AdminFooter = () => {
-    return (<div> Footer </div>)
-
-}
 
 const store = createStore(rootReducer, compose(applyMiddleware(redux_logger, thunk)));
 // const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
 ReactDOM.render(
     <Provider store={store}>
-        <div>
-            <AdminHeader />
-            <BrowserRouter basename="/admin/">
-                <Switch>
-                    <Route path="/users" render={() => (<div>Users page</div>)} />
-                    <Route path="/account" render={() => (<div>Account page</div>)} />
-                    <Route path="/domains" render={() => (<div>Domains page</div>)} />
-                    <Route path="/pages" render={() => (<div>Pages page</div>)} />
-                    <Route path="/comments" render={() => (<div>Comments page</div>)} />
-                    <Route path="/" render={() => (<div>Admin page</div>)} />
-                </Switch>
-            </BrowserRouter>
-            <AdminFooter />
-        </div>
+        <BrowserRouter basename="/admin/">
+            <div>
+                <AdminHeader />
+                <div className="container">
+                    <Switch>
+                        <Route path="/users" render={() => (<div>Users page</div>)} />
+                        <Route path="/account" render={() => (<div>Account page</div>)} />
+                        <Route path="/domains" render={() => (<div>Domains page</div>)} />
+                        <Route path="/pages" render={() => (<div>Pages page</div>)} />
+                        <Route path="/comments" render={() => (<div>Comments page</div>)} />
+                        <Route path="/" component={AdminHome} />
+                    </Switch>
+                </div>
+            </div>
+        </BrowserRouter>
     </Provider>,
     document.getElementById('hello-react')
 )

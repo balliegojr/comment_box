@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
+import AuthenticatedForms from './authentication/authenticationForms'
 import CommentBox from '../components/comments/commentBox'
 import ComentList from './comments/commentList'
-import Anonymous from './user/anonymous'
-import Authenticated from './user/authenticated'
+import TopContent from './comments/topContent'
 
 import * as pageActions from '../store/actions/pageSettingsActions'
 import * as commentActions from '../store/actions/commentActions'
@@ -51,8 +51,8 @@ class PageDisplay extends Component {
         return (
             <div>
                 { !this.props.user.isAuthenticated 
-                    ? <Anonymous />
-                    : <Authenticated />
+                    ? <AuthenticatedForms />
+                    : <TopContent />
                 }
 
                 { !this.props.settings.isLoaded ? 

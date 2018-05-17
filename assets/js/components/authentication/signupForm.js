@@ -5,7 +5,7 @@ import * as userActions from '../../store/actions/userActions'
 
 
 
-class SignUp extends ValidationComponent {
+class SignUpForm extends ValidationComponent {
     constructor(props) {
         super(props);
 
@@ -108,4 +108,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(SignUp);
+export default connect(null, mapDispatchToProps)(SignUpForm);

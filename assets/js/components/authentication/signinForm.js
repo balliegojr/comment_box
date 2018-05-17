@@ -3,7 +3,7 @@ import ValidationComponent from '../validationComponent'
 import { connect } from 'react-redux'
 import * as userActions from '../../store/actions/userActions'
 
-class Signin extends ValidationComponent {
+class SigninForm extends ValidationComponent {
     constructor(props) {
         super(props);
 
@@ -73,4 +73,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(Signin);
+export default connect(null, mapDispatchToProps)(SigninForm);

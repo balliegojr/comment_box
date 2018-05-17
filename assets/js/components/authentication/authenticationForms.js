@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import Signin from './signin'
-import Signup from './signup'
+import SigninForm from './signinForm'
+import SignupForm from './signupForm'
 
-class Anonymous extends Component {
+class AuthenticationForms extends Component {
     constructor(props) {
         super(props)
 
@@ -27,11 +27,11 @@ class Anonymous extends Component {
             <div>
                 <div className="text-center alert alert-warning"> You are not authenticated, please <a onClick={() => this.handleToggleSignin(!this.state.showSignin)}>sign in</a> or <a onClick={() => this.handleToggleSignup(!this.state.showSignup)} >sign up</a> 
                 </div>
-                {this.state.showSignin ? <Signin /> : "" }
-                {this.state.showSignup ? <Signup /> : "" }
+                {this.state.showSignin ? <SigninForm /> : "" }
+                {this.state.showSignup ? <SignupForm /> : "" }
             </div>
         )
     }
 }
 
-export default Anonymous
+export default AuthenticationForms
