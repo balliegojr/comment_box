@@ -15,7 +15,7 @@ defmodule CommentBox.Accounts.User do
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
 
-    has_many :user_roles, UserRole
+    has_many :user_roles, UserRole, on_replace: :delete
 
     timestamps()
   end
@@ -23,12 +23,20 @@ defmodule CommentBox.Accounts.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :username, :email, :password, :password_confirmation])
+    |> cast(attrs, [:name, :username, :email, :password, :password_confirmation, :account_status])
     |> validate_required([:username, :email, :password, :password_confirmation])
     |> validate_confirmation(:password, message: "Password does not match")
     |> unique_constraint(:username, message: "Username already in use")
     |> unique_constraint(:email, message: "Email already in use")
     |> put_pass_hash()
+    
+  end
+
+  def admin_update_changeset(user, attrs) do
+    
+    user
+    |> cast(attrs, [:name, :account_status])
+    |> validate_required([:account_status])
     
   end
 

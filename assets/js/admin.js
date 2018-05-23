@@ -30,20 +30,23 @@ import { BrowserRouter, Route, Switch } from "react-router-dom"
 import * as socketService from "./services/socketService";
 
 
-import { authReducer } from './store/reducers/'
+import { authReducer, usersReducer } from './store/reducers/'
 import { authActions } from './store/actions';
 import * as userService from './services/userService';
 
 import AdminHeader from './components/admin/header';
 import AdminHome from './components/admin/home';
 import UserList from './components/users/userList';
+import UserEdit from './components/users/userEdit';
 
 import { redux_logger } from './utility';
+import { Authenticated, Anonymous } from './components/authorization';
 
 socketService.connect();
 
 const rootReducer = combineReducers({
-    user: authReducer
+    user: authReducer,
+    users: usersReducer
 });
 
 
@@ -53,17 +56,23 @@ const store = createStore(rootReducer, compose(applyMiddleware(redux_logger, thu
 ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter basename="/admin/">
-            <div>
+            <div >
                 <AdminHeader />
                 <div className="container">
-                    <Switch>
-                        <Route path="/users" component={UserList} />
-                        <Route path="/account" render={() => (<div>Account page</div>)} />
-                        <Route path="/domains" render={() => (<div>Domains page</div>)} />
-                        <Route path="/pages" render={() => (<div>Pages page</div>)} />
-                        <Route path="/comments" render={() => (<div>Comments page</div>)} />
-                        <Route path="/" component={AdminHome} />
-                    </Switch>
+                    <Anonymous>
+                        <AdminHome /> 
+                    </Anonymous>
+                    
+                        <Switch>
+                            <Authenticated>
+                                <Route path="/users/:id" exact component={UserEdit} />
+                                <Route path="/users" exact component={UserList} />
+                                <Route path="/account" render={() => (<div>Account page</div>)} />
+                                <Route path="/domains" render={() => (<div>Domains page</div>)} />
+                                <Route path="/pages" render={() => (<div>Pages page</div>)} />
+                                <Route path="/comments" render={() => (<div>Comments page</div>)} />
+                            </Authenticated>
+                        </Switch>
                 </div>
             </div>
         </BrowserRouter>

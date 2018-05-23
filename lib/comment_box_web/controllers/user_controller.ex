@@ -5,6 +5,7 @@ defmodule CommentBoxWeb.UserController do
     alias CommentBox.Accounts.User
 
     action_fallback CommentBoxWeb.FallbackController
+    @valid_user_types ~w(admin owner moderator)
 
     def sign_up(conn, %{"user" => user_info}) do
         with {:ok, %User{} = user} <- Accounts.create_user(user_info) do
@@ -42,4 +43,29 @@ defmodule CommentBoxWeb.UserController do
 
         show(conn, user)
     end
+
+    def index(conn, _) do
+        users = Accounts.list_users()
+        render conn, "index.json", user: users
+    end
+
+    def user_by_type(conn, %{"type" => type}) do
+        
+        types = 
+            String.split(type, ",") 
+            |> Enum.filter(fn(t) -> Enum.any?(@valid_user_types, fn(x) -> x == t end) end)
+            |> Enum.map(&String.capitalize/1)
+
+        
+        users = Accounts.list_users(types)
+        render conn, "index.json", user: users
+    end
+
+    def admin_update(conn, %{"id" => id, "user" => user_params}) do
+        user = Accounts.get_user!(id)
+        with {:ok, %User{} = user} <- Accounts.admin_update_user(user, user_params) do
+            render(conn, "show.json", user: Accounts.get_user!(id))
+        end
+    end
+
 end

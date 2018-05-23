@@ -36,7 +36,7 @@ class AdminHeader extends Component {
 
         return (
             //navbar-fixed-top
-            <nav className="navbar navbar-default ">
+            <nav className="navbar navbar-default navbar-fixed-top">
                 <div className="navbar-header navbar-left">
                     <Link to="/" className="navbar-brand"> Brand </Link>
                 </div>

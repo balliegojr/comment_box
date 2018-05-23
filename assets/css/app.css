@@ -2,8 +2,21 @@
 
 @import "./phoenix.css";
 
+a {
+    cursor: pointer;
+}
+
+.btn-default.active {
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
 .no-resize {
     resize: none;
+}
+
+.admin {
+    margin-top: 50px;
 }
 
 .comments > hr{
@@ -32,10 +45,7 @@
 }
 
 .comment.negative pre {
-    color: red
-}
-a {
-    cursor: pointer;
+    color: red;
 }
 
 .form-control.error {
@@ -52,10 +62,14 @@ a {
 .error-message:empty {
     display: none;
 }
-
 .error-message:not(:empty)::before {
     content:  "•  ";
-    /* display: list-item;
-    list-style-type: disc;
-    list-style-position: inside; */
+}
+
+.user-list .alert {
+    margin-top: 20px;
+}
+
+.navbar-fixed-top {
+    padding-right: 15px;
 }

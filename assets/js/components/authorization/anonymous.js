@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 
-class Authenticated extends Component {
+class Anonymous extends Component {
     render() {
-        if (!this.props.user.isAuthenticated) {
+        if (this.props.user.isAuthenticated) {
             return null
         }
 
@@ -18,4 +18,4 @@ const mapStateToProps = (state) => {
     }
 }
 
-export default connect(mapStateToProps)(Authenticated)
+export default connect(mapStateToProps)(Anonymous)

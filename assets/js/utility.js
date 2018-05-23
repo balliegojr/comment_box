@@ -3,6 +3,10 @@ export const expandObject = (object, property) => {
     return Object.assign(newObject, property);
 }
 
+export const cloneObject = (object) => {
+    return JSON.parse(JSON.stringify(object));
+}
+
 export const queryParameters = () => {
     let match = null
     const pl = /\+/g,  // Regex for replacing addition symbol with a space

@@ -6,7 +6,7 @@ defmodule CommentBox.Accounts do
   import Ecto.Query, warn: false
   alias CommentBox.Repo
 
-  alias CommentBox.Accounts.User
+  alias CommentBox.Accounts.{User, UserRole, Role}
 
   @doc """
   Returns the list of users.
@@ -17,8 +17,32 @@ defmodule CommentBox.Accounts do
       [%User{}, ...]
 
   """
-  def list_users do
-    Repo.all(User)
+  def list_users() do
+    Repo.all from user in User,
+      left_join: user_roles in assoc(user, :user_roles),
+      left_join: role in assoc(user_roles, :role),
+      preload: [user_roles: {user_roles, role: role}]
+  end
+
+  @doc """
+  Returns the list of users of the given roles.
+
+  ## Examples
+
+      iex> list_users(roles)
+      [%User{}, ...]
+
+  """
+  def list_users(roles) do
+    Repo.all from user in User,
+      left_join: user_roles in assoc(user, :user_roles),
+      left_join: role in assoc(user_roles, :role),
+      
+      left_join: user_roles2 in assoc(user, :user_roles),
+      left_join: role2 in assoc(user_roles2, :role),
+      
+      where: role.name in ^roles,
+      preload: [user_roles: {user_roles2, role: role2}]
   end
 
   @doc """
@@ -36,9 +60,11 @@ defmodule CommentBox.Accounts do
 
   """
   def get_user!(id) do
-    # TODO: refactor to use joins
-     user = Repo.get!(User, id) 
-      |> Repo.preload([user_roles: [:role]])
+    Repo.one from user in User,
+      where: user.id == ^id,
+      left_join: user_roles in assoc(user, :user_roles),
+      left_join: role in assoc(user_roles, :role),
+      preload: [user_roles: {user_roles, role: role}]
   end
 
   @doc """
@@ -78,6 +104,37 @@ defmodule CommentBox.Accounts do
   end
 
   @doc """
+  Updates a user roles and account status
+
+  ## Examples
+
+      iex> admin_update_user(user, %{field: new_value})
+      {:ok, %User{}}
+
+      iex> admin_update_user(user, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def admin_update_user(%User{} = user, %{ "roles" => roles} = attrs) do
+    add_roles = roles |> Enum.filter(fn role -> role["add"] === true end) |> Enum.map(fn role -> role["name"] end)
+    
+    add_roles = 
+    if Enum.count(add_roles) > 0 do
+      Repo.all(from r in Role, where: r.name in ^add_roles, select: r.id) 
+      |> Enum.map(fn role_id -> UserRole.changeset(%UserRole{}, %{ user_id: user.id, role_id: role_id }) end)
+    else
+      add_roles
+    end
+    
+    user
+    |> User.admin_update_changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user_roles, 
+      Enum.filter(user.user_roles, fn ur -> !Enum.any?(roles, fn role -> role["name"] === ur.role.name && role["remove"] === true end) end)
+      ++ add_roles)
+    |> Repo.update()
+  end
+
+  @doc """
   Deletes a User.
 
   ## Examples
@@ -108,16 +165,26 @@ defmodule CommentBox.Accounts do
 
 
   def find_by_username(username) do
-    Repo.get_by(User, username: username)
+    Repo.one from user in User,
+      where: user.username == ^username,
+      left_join: user_roles in assoc(user, :user_roles),
+      left_join: role in assoc(user_roles, :role),
+      preload: [user_roles: {user_roles, role: role}]
 
   end
 
   def authenticate(user, password) do
+    
     # Does password match the one stored in the database?
     case Comeonin.Bcrypt.checkpw(password, user.password_hash) do
       true ->
+        roles = case Enum.any?(user.user_roles, fn ur -> ur.role.name === "Admin" end) do
+          true -> %{ is_admin: true }
+          _ -> %{}
+        end
+
         # Yes, create and return the token
-        CommentBox.Auth.Guardian.encode_and_sign(user)
+        CommentBox.Auth.Guardian.encode_and_sign(user, roles)
       _ ->
         # No, return an error
         {:error, :unauthorized}

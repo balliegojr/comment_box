@@ -7,7 +7,7 @@ defmodule CommentBox.Repo.Migrations.CreateUsers do
       add :username, :string
       add :email, :string
       add :password_hash, :string
-      add :account_status, :integer
+      add :account_status, :integer, default: 0
       add :reputation, :integer
 
       timestamps()

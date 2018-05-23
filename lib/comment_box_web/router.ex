@@ -27,12 +27,15 @@ defmodule CommentBoxWeb.Router do
     # plug :api
     plug :accepts, ["json"]
     
-
     plug CommentBox.Auth.Pipeline
     plug Guardian.Plug.EnsureAuthenticated
     # plug :put_user_token
   end
 
+  pipeline :api_auth_admin do
+    plug :accepts, ["json"]
+    plug CommentBox.Auth.PipelineAdmin
+  end
   
   
   # Other scopes may use custom stacks.
@@ -51,6 +54,15 @@ defmodule CommentBoxWeb.Router do
     
     get "/auth/me", UserController, :me
     resources "/comment", CommentController, except: [:new, :edit]
+    resources "/user", UserController, except: [:new, :edit]
+    
+  end
+  
+  scope "/api", CommentBoxWeb do
+    pipe_through :api_auth_admin
+    
+    get "/user/byType/:type", UserController, :user_by_type
+    put "/user/:id/admin", UserController, :admin_update
   end
 
   scope "/", CommentBoxWeb do

@@ -15,6 +15,8 @@ defmodule CommentBoxWeb.UserView do
       id: user.id,
       username: user.username,
       email: user.email,
+      account_status: user.account_status,
+      name: user.name,
 
       roles: render_many(user.user_roles, UserView, "user_role.json")
     }
@@ -25,4 +27,6 @@ defmodule CommentBoxWeb.UserView do
       name: user_role.role.name
     }
   end
+  def render("user_role.json", _), do: nil
+  
 end
