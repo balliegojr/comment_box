@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Link, NavLink } from 'react-router-dom'
 
 import { Role, Authenticated } from '../authorization'
-import { authActions } from '../../store/actions'
+import { accountActions } from '../../store/actions'
 
 class AdminHeader extends Component {
     handleDropdownToggle(ev) {
@@ -21,7 +21,8 @@ class AdminHeader extends Component {
                 <div className="collapse navbar-collapse navbar-header  navbar-right">
                     <ul className="nav navbar-nav ">
                         <li className="dropdown">
-                            <a className="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" onClick={(ev) => this.handleDropdownToggle(ev)}> {this.props.user.current.username} <span className="caret"></span></a>
+                            <a className="dropdown-toggle" data-toggle="droLog out
+pdown" role="button" aria-haspopup="true" aria-expanded="false" onClick={(ev) => this.handleDropdownToggle(ev)}> {this.props.user.current.username} <span className="caret"></span></a>
                             <ul className="dropdown-menu">
                                 <li><NavLink to="/account" activeClassName="active"> Account </NavLink></li>
                                 <li role="separator" className="divider"></li>
@@ -64,7 +65,7 @@ const mapStateToProps = (state) => {
 
 const mapActionsToProps = (dispatch) => {
     return {
-        doSignOut: () => dispatch(authActions.signout())
+        doSignOut: () => dispatch(accountActions.signout())
     }
 }
 

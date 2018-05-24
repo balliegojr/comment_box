@@ -32,6 +32,15 @@ defmodule CommentBox.Accounts.User do
     
   end
 
+  def update_nopassword_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:name, :username, :email, :account_status])
+    |> validate_required([:username, :email])
+    |> unique_constraint(:username, message: "Username already in use")
+    |> unique_constraint(:email, message: "Email already in use")
+    
+  end
+
   def admin_update_changeset(user, attrs) do
     
     user

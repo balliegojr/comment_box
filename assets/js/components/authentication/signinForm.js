@@ -1,7 +1,7 @@
 import React from 'react'
 import ValidationComponent from '../validationComponent'
 import { connect } from 'react-redux'
-import { authActions } from '../../store/actions'
+import { accountActions } from '../../store/actions'
 
 class SigninForm extends ValidationComponent {
     constructor(props) {
@@ -69,7 +69,7 @@ class SigninForm extends ValidationComponent {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        doSignin: (signininfo) => dispatch(authActions.signin(signininfo))
+        doSignin: (signininfo) => dispatch(accountActions.signin(signininfo))
     }
 }
 

@@ -8,6 +8,10 @@ class Authenticated extends Component {
             return null
         }
 
+        if (!this.props.user.current) {
+            return null;
+        }
+
         return this.props.children;
     }
 }

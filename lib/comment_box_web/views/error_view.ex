@@ -5,6 +5,10 @@ defmodule CommentBoxWeb.ErrorView do
     "Page not found"
   end
 
+  def render("401.html", _assigns) do
+    "Unauthorized"
+  end
+
   def render("500.html", _assigns) do
     "Internal server error"
   end

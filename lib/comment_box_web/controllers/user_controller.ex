@@ -68,4 +68,15 @@ defmodule CommentBoxWeb.UserController do
         end
     end
 
+    def update(conn, %{"id" => id, "user" => user_params}) do
+        user = Accounts.get_user!(id)
+        if id !== Guardian.Plug.current_resource(conn)["id"] do
+            conn |> put_status(:unauthorized) |> send_resp(:no_content, "")
+        else
+            case Accounts.update_user(user, user_params) do
+                {:ok, %User{} = user} -> render(conn, "show.json", user: Accounts.get_user!(id))
+                {:error, :unauthorized} -> conn |> put_status(:unauthorized) |> json(%{errors: %{ current_password: "Password invalid" }})
+            end
+        end
+    end
 end

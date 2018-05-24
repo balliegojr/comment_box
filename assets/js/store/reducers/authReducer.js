@@ -1,6 +1,6 @@
 import  { actionTypes } from '../actions'
 import { expandObject } from '../../utility'
-import { getToken, hasToken, setToken, setHeader, clearToken } from '../../services/userService'
+import { getToken, hasToken, setToken, setHeader, clearToken } from '../../services/accountService'
 
 const token = getToken();
 const initialState = {

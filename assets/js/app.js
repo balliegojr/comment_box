@@ -28,8 +28,8 @@ import thunk from 'redux-thunk'
 import * as socketService from "./services/socketService";
 import { authReducer, commentsReducer, pageSettingsReducer } from "./store/reducers";
 
-import { authActions } from './store/actions';
-import * as userService from './services/userService';
+import { accountActions } from './store/actions';
+import * as accountService from './services/accountService';
 
 import PageDisplay from './components/pageDisplay';
 import { resize_display, redux_logger } from './utility';
@@ -55,6 +55,6 @@ if (window.parent.commentbox) {
     resize_display('hello-react', window.parent.commentbox.container);
 }
 
-if (userService.hasToken()) {
-    store.dispatch(authActions.setTokenAndLoadUser(userService.getToken()));
+if (accountService.hasToken()) {
+    store.dispatch(accountActions.setTokenAndLoadUser(accountService.getToken()));
 }

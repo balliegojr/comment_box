@@ -97,11 +97,19 @@ defmodule CommentBox.Accounts do
       {:error, %Ecto.Changeset{}}
 
   """
+  def update_user(%User{} = user, %{ "current_password" => password } = attrs) do
+    case Comeonin.Bcrypt.checkpw(password, user.password_hash) do
+      true -> user |> User.changeset(attrs) |> Repo.update()
+      _ -> {:error, :unauthorized}
+    end
+  end
+
   def update_user(%User{} = user, attrs) do
     user
-    |> User.changeset(attrs)
+    |> User.update_nopassword_changeset(attrs)
     |> Repo.update()
   end
+
 
   @doc """
   Updates a user roles and account status

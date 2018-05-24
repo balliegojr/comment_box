@@ -60,11 +60,8 @@ export const edituser = (user_id) => (dispatch, getStore) => {
 }
 
 export const saveUserChangesFromAdmin = (user_info) => (dispatch) => {
-    return new Promise((resolve, reject) => {
-        saveUserFromAdmin(user_info)
-            .then(() => {
-                
-                resolve();
-            }, reason => reject(reason));
-    });
+    return saveUserFromAdmin(user_info)
+            .then(() => { 
+
+            });
 }

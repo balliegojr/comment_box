@@ -1,5 +1,5 @@
 import * as actionTypes from './actionTypes'
-import * as userService from '../../services/userService';
+import * as accountService from '../../services/accountService';
 
 const setAuthToken = (token) => {
     return {
@@ -18,7 +18,7 @@ const setUser = (userInfo) => {
 export const setTokenAndLoadUser = (access_token) => (dispatch) => {
     dispatch(setAuthToken(access_token));
 
-    userService.currentUser()
+    accountService.currentUser()
         .then((userInfo) => {
             dispatch(setUser(userInfo.data));
         }, (reason) => {
@@ -28,14 +28,14 @@ export const setTokenAndLoadUser = (access_token) => (dispatch) => {
 }
 
 export const signin = (signinInfo) => (dispatch) => {
-    return userService.signin(signinInfo.username, signinInfo.password)
+    return accountService.signin(signinInfo.username, signinInfo.password)
         .then((access_token) => {
             dispatch(setTokenAndLoadUser(access_token));
         });
 }
 
 export const signup = (userInfo) => (dispatch) => {
-    return userService.signup(userInfo)
+    return accountService.signup(userInfo)
         .then((access_token) => {
             dispatch(setTokenAndLoadUser(access_token));
         });
@@ -45,4 +45,11 @@ export const signout = () => {
     return {
         type: actionTypes.CLEAR_USER_DATA,
     }
+}
+
+export const updateAccount = (user_info) => (dispatch) => {
+    return accountService.updateAccount(user_info)
+        .then(updated_account => {
+            dispatch(setUser(updated_account));
+        });
 }

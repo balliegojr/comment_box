@@ -31,13 +31,14 @@ import * as socketService from "./services/socketService";
 
 
 import { authReducer, usersReducer } from './store/reducers/'
-import { authActions } from './store/actions';
-import * as userService from './services/userService';
+import { accountActions } from './store/actions';
+import * as accountService from './services/accountService';
 
 import AdminHeader from './components/admin/header';
 import AdminHome from './components/admin/home';
 import UserList from './components/users/userList';
 import UserEdit from './components/users/userEdit';
+import Account from './components/users/account';
 
 import { redux_logger } from './utility';
 import { Authenticated, Anonymous } from './components/authorization';
@@ -67,7 +68,7 @@ ReactDOM.render(
                             <Authenticated>
                                 <Route path="/users/:id" exact component={UserEdit} />
                                 <Route path="/users" exact component={UserList} />
-                                <Route path="/account" render={() => (<div>Account page</div>)} />
+                                <Route path="/account" component={Account} />
                                 <Route path="/domains" render={() => (<div>Domains page</div>)} />
                                 <Route path="/pages" render={() => (<div>Pages page</div>)} />
                                 <Route path="/comments" render={() => (<div>Comments page</div>)} />
@@ -80,6 +81,6 @@ ReactDOM.render(
     document.getElementById('hello-react')
 )
 
-if (userService.hasToken()) {
-    store.dispatch(authActions.setTokenAndLoadUser(userService.getToken()));
+if (accountService.hasToken()) {
+    store.dispatch(accountActions.setTokenAndLoadUser(accountService.getToken()));
 }

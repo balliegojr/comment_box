@@ -52,3 +52,12 @@ export function signout() {
 export function currentUser() {
     return axios.get("/api/auth/me");
 }
+
+export function updateAccount(user_info) {
+    return new Promise((resolve, reject) => {
+        axios.put(`/api/user/${user_info.id}`, { user: user_info })
+            .then((saved_info) => {
+                resolve(saved_info.data);
+            }, (reason) => reject(reason.response.data));
+    });
+}

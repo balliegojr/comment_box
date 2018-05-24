@@ -12,6 +12,13 @@ defmodule CommentBoxWeb.FallbackController do
     |> render(CommentBoxWeb.ChangesetView, "error.json", changeset: changeset)
   end
 
+
+  def call(conn, {:error, :unauthorized}) do
+    conn
+    |> put_status(:unauthorized)
+    |> render(CommentBoxWeb.ErrorView, :"401")
+  end
+
   def call(conn, {:error, :not_found}) do
     conn
     |> put_status(:not_found)

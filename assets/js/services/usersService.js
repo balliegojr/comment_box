@@ -14,5 +14,10 @@ export function getUser(user_id) {
 }
 
 export function saveUserFromAdmin(user_info) {
-    return axios.put(`/api/user/${user_info.id}/admin`, { user: user_info });
+    return new Promise((resolve, reject) => {
+        axios.put(`/api/user/${user_info.id}/admin`, { user: user_info })
+            .then(saved_info => {
+                resolve(saved_info.data);
+            }, reason => reject(reason)) 
+    });
 }

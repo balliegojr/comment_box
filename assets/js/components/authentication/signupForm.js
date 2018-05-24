@@ -1,7 +1,7 @@
 import React from 'react'
 import ValidationComponent from '../validationComponent'
 import { connect } from 'react-redux'
-import { authActions } from '../../store/actions'
+import { accountActions } from '../../store/actions'
 
 
 
@@ -104,7 +104,7 @@ class SignUpForm extends ValidationComponent {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        doSignup: (user) => dispatch(authActions.signup(user))
+        doSignup: (user) => dispatch(accountActions.signup(user))
     }
 }
 
