@@ -26,8 +26,8 @@ class AdminHeader extends Component {
 
     handleSignout() {
         console.log('signout')
-        console.log(this.props.location)
-        // this.props.doSignOut();
+        
+        this.props.doSignOut();
         
     }
 

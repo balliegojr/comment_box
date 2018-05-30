@@ -41,7 +41,7 @@ import UserEdit from './components/users/userEdit';
 import Account from './components/users/account';
 
 import { redux_logger } from './utility';
-import { Authenticated, Anonymous, Role } from './components/authorization';
+import { Authenticated, Anonymous, Role, AuthenticatedRoute } from './components/authorization';
 import AuthenticationForms from './components/authentication/authenticationForms';
 
 socketService.connect();
@@ -66,19 +66,14 @@ ReactDOM.render(
                     </Anonymous>
                     
                     <Switch>
-                        <Authenticated>
-                            <Role roles={["Admin"]}>
-                                <Route path="/users/:id" exact component={UserEdit} />
-                                <Route path="/users" exact component={UserList} />
-                            </Role>
-                            <Route path="/account" component={Account} />
-                            <Route path="/domains" render={() => (<div>Domains page</div>)} />
-                            <Route path="/pages" render={() => (<div>Pages page</div>)} />
-                            <Route path="/comments" render={() => (<div>Comments page</div>)} />
-                            
-                            <Route path="/" exact component={AdminHome} />
-
-                        </Authenticated>
+                        <AuthenticatedRoute roles={["Admin"]} path="/users/:id" exact component={UserEdit} />
+                        <AuthenticatedRoute roles={["Admin"]} path="/users" exact component={UserList} />
+                        
+                        <AuthenticatedRoute path="/account" component={Account} />
+                        <AuthenticatedRoute path="/domains" render={() => (<div>Domains page</div>)} />
+                        <AuthenticatedRoute path="/pages" render={() => (<div>Pages page</div>)} />
+                        <AuthenticatedRoute path="/comments" render={() => (<div>Comments page</div>)} />
+                        <AuthenticatedRoute path="/" exact component={AdminHome} />
                     </Switch>
                 </div>
             </div>
