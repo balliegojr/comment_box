@@ -142,6 +142,16 @@ defmodule CommentBox.Accounts do
     |> Repo.update()
   end
 
+  def set_user_plan(%User{} = user, %{ "plan" => plan, "domain" => domain}) do
+    owner_role_id = Repo.one(from r in Role, where: r.name == "Owner", select: r.id)
+    owner_user_role = UserRole.changeset(%UserRole{}, %{ user_id: user.id, role_id: owner_role_id })
+    
+    user
+    |> User.update_plan_only_changeset(%{"plan" => plan})
+    |> Ecto.Changeset.put_assoc(:user_roles, user.user_roles ++ [owner_user_role])
+    |> Repo.update()
+  end
+
   @doc """
   Deletes a User.
 

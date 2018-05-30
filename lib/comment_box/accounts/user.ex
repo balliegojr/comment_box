@@ -11,6 +11,7 @@ defmodule CommentBox.Accounts.User do
     field :password_hash, :string
     field :username, :string
     field :reputation, :integer
+    field :plan, :string
 
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
@@ -39,6 +40,11 @@ defmodule CommentBox.Accounts.User do
     |> unique_constraint(:username, message: "Username already in use")
     |> unique_constraint(:email, message: "Email already in use")
     
+  end
+
+  def update_plan_only_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:plan])
   end
 
   def admin_update_changeset(user, attrs) do

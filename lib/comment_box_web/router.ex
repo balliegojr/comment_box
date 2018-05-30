@@ -54,8 +54,9 @@ defmodule CommentBoxWeb.Router do
     
     get "/auth/me", UserController, :me
     resources "/comment", CommentController, except: [:new, :edit]
-    resources "/user", UserController, except: [:new, :edit]
     
+    put "/user/plan", UserController, :set_plan
+    resources "/user", UserController, except: [:new, :edit]
   end
   
   scope "/api", CommentBoxWeb do

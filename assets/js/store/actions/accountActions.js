@@ -53,3 +53,10 @@ export const updateAccount = (user_info) => (dispatch) => {
             dispatch(setUser(updated_account));
         });
 }
+
+export const joinPlan = (plan_info) => (dispatch) => {
+    return accountService.joinPlan(plan_info)
+        .then(updated_account => {
+            dispatch(setUser(updated_account));
+        });
+}

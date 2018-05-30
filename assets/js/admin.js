@@ -41,7 +41,8 @@ import UserEdit from './components/users/userEdit';
 import Account from './components/users/account';
 
 import { redux_logger } from './utility';
-import { Authenticated, Anonymous } from './components/authorization';
+import { Authenticated, Anonymous, Role } from './components/authorization';
+import AuthenticationForms from './components/authentication/authenticationForms';
 
 socketService.connect();
 
@@ -61,19 +62,24 @@ ReactDOM.render(
                 <AdminHeader />
                 <div className="container">
                     <Anonymous>
-                        <AdminHome /> 
+                        <AuthenticationForms />
                     </Anonymous>
                     
-                        <Switch>
-                            <Authenticated>
+                    <Switch>
+                        <Authenticated>
+                            <Role roles={["Admin"]}>
                                 <Route path="/users/:id" exact component={UserEdit} />
                                 <Route path="/users" exact component={UserList} />
-                                <Route path="/account" component={Account} />
-                                <Route path="/domains" render={() => (<div>Domains page</div>)} />
-                                <Route path="/pages" render={() => (<div>Pages page</div>)} />
-                                <Route path="/comments" render={() => (<div>Comments page</div>)} />
-                            </Authenticated>
-                        </Switch>
+                            </Role>
+                            <Route path="/account" component={Account} />
+                            <Route path="/domains" render={() => (<div>Domains page</div>)} />
+                            <Route path="/pages" render={() => (<div>Pages page</div>)} />
+                            <Route path="/comments" render={() => (<div>Comments page</div>)} />
+                            
+                            <Route path="/" exact component={AdminHome} />
+
+                        </Authenticated>
+                    </Switch>
                 </div>
             </div>
         </BrowserRouter>

@@ -79,4 +79,13 @@ defmodule CommentBoxWeb.UserController do
             end
         end
     end
+
+    def set_plan(conn, %{ "plan" => plan_params}) do
+        user = Guardian.Plug.current_resource(conn)["id"]
+            |> Accounts.get_user!()
+
+        with {:ok, user } <- Accounts.set_user_plan(user, plan_params) do
+            render(conn, "show.json", user: Accounts.get_user!(user.id))
+        end
+    end
 end

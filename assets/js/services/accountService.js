@@ -61,3 +61,12 @@ export function updateAccount(user_info) {
             }, (reason) => reject(reason.response.data));
     });
 }
+
+export function joinPlan(plan_info) {
+    return new Promise((resolve, reject) => {
+        axios.put(`/api/user/plan`, { plan: plan_info})
+            .then((saved_info) => {
+                resolve(saved_info.data);
+            }, (reason) => reject(reason.response.data));
+    })
+}

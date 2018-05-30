@@ -73,3 +73,16 @@ a {
 .navbar-fixed-top {
     padding-right: 15px;
 }
+
+.navbar .logo {
+    max-height: 50px
+}
+
+.plan-chooser .plan .panel-heading .img {
+    max-height: 70px;
+    margin-top: -25px;
+}
+
+.plan-form .img {
+    max-height: 100px;
+}
