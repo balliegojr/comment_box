@@ -24,7 +24,7 @@ class PlanForm extends ValidationComponent {
 
         this.props.doJoinPlan({ plan: this.props.plan.name, domain: this.state.domain })
             .then(() => {
-
+                
             }, (reason) => {
                 
             });

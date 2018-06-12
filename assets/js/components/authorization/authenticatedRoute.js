@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 
 class AuthenticatedRoute extends Component {
     validateAccess(roles) {
-        console.log(roles)
         if (!this.props.user.isAuthenticated) {
             return false;
         }
@@ -19,7 +18,6 @@ class AuthenticatedRoute extends Component {
                 !((roles.length === 0 && this.props.user.current.roles.length === 0)
                 || (roles.some(role => this.props.user.current.roles.some(userRole => role === userRole.name))))
             ) {
-                console.log("false")
                 return false;
             }
         }

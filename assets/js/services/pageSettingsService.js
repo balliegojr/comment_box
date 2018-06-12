@@ -2,17 +2,17 @@ import axios from 'axios';
 import { queryParameters } from "../utility";
 
 export function getPageSettings() {
-    const { client_id, app_id, url } = queryParameters();
+    const { app_key, url, host } = queryParameters();
     const params = [];
-    if (!!client_id) {
-        params.push(`c=${client_id}`);
-    }
-    if (!!app_id) {
-        params.push(`a=${app_id}`);
+
+    if (!!app_key) {
+        params.push(`k=${app_key}`);
     }
     if (!!url) {
         params.push(`u=${url}`);
     }
-    
+    if (!!host) {
+        params.push(`h=${host}`);
+    }
     return axios.get(`/api/page?${params.join('&')}`);
 }

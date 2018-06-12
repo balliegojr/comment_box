@@ -1,7 +1,7 @@
 defmodule CommentBoxWeb.UserController do
     use CommentBoxWeb, :controller
 
-    alias CommentBox.Accounts
+    alias CommentBox.{Accounts, Comments}
     alias CommentBox.Accounts.User
 
     action_fallback CommentBoxWeb.FallbackController
@@ -85,6 +85,7 @@ defmodule CommentBoxWeb.UserController do
             |> Accounts.get_user!()
 
         with {:ok, user } <- Accounts.set_user_plan(user, plan_params) do
+            Comments.create_domain(%{ "user_id" => user.id, "address" => plan_params["domain"]})
             render(conn, "show.json", user: Accounts.get_user!(user.id))
         end
     end

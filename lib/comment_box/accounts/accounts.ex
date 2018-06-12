@@ -60,7 +60,7 @@ defmodule CommentBox.Accounts do
 
   """
   def get_user!(id) do
-    Repo.one from user in User,
+    Repo.one! from user in User,
       where: user.id == ^id,
       left_join: user_roles in assoc(user, :user_roles),
       left_join: role in assoc(user_roles, :role),
@@ -142,7 +142,7 @@ defmodule CommentBox.Accounts do
     |> Repo.update()
   end
 
-  def set_user_plan(%User{} = user, %{ "plan" => plan, "domain" => domain}) do
+  def set_user_plan(%User{} = user, %{ "plan" => plan }) do
     owner_role_id = Repo.one(from r in Role, where: r.name == "Owner", select: r.id)
     owner_user_role = UserRole.changeset(%UserRole{}, %{ user_id: user.id, role_id: owner_role_id })
     

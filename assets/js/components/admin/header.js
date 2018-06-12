@@ -67,8 +67,9 @@ class AdminHeader extends Component {
                                 <li><NavLink to="/users" activeClassName="active"> Users </NavLink></li>
                             </Role>
                             <Role roles={["Owner", "Moderator"]}>
-                                <li><NavLink to="/pages" activeClassName="active"> Pages </NavLink></li>
-                                <li><NavLink to="/comments" activeClassName="active"> Comments </NavLink></li>
+                                <li><NavLink to="/domains" activeClassName="active"> Domains </NavLink></li>
+                                {/* <li><NavLink to="/pages" activeClassName="active"> Pages </NavLink></li> */}
+                                {/* <li><NavLink to="/comments" activeClassName="active"> Comments </NavLink></li> */}
                             </Role>
                         </ul>
 

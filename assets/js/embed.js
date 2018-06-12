@@ -16,8 +16,9 @@ global.commentbox = {
             throw Error("Target must be a valid identifier");
         } 
         const target = document.querySelector(opt.target);
-        const { client_id, app_id, url } = opt;
-        
+        const { app_key, url } = opt;
+        const host = encodeURI(location.host);
+
         let _url;
         if (url) {
             _url = encodeURI(url);
@@ -31,7 +32,7 @@ global.commentbox = {
             iframe.setAttribute(prop, attributes[prop]);
         }
 
-        iframe.setAttribute("src", `/app?client_id=${client_id}&app_id=${app_id}&url=${_url}`);
+        iframe.setAttribute("src", `/app?app_key=${app_key}&url=${_url}&host=${host}`);
         target.appendChild(iframe);
         this.container = iframe;
 

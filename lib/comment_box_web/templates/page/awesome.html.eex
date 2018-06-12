@@ -10,5 +10,5 @@
 </div>
 <script src="<%= static_path(@conn, "/js/embed.js") %>"></script>
 <script>
-  commentbox.load({ target: ".container", client_id: "", app_id: "", url: "/examples/awesome" })
+  commentbox.load({ target: ".container", app_key: encodeURI("<%= @domain.app_key %>"), url: "/examples/awesome" })
 </script>

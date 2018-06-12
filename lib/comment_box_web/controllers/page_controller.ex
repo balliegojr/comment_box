@@ -1,6 +1,8 @@
 defmodule CommentBoxWeb.PageController do
   use CommentBoxWeb, :controller
 
+  alias CommentBox.Comments
+
   def index(conn, _params) do
     redirect conn, to: "/examples/awesome"
   end
@@ -14,6 +16,7 @@ defmodule CommentBoxWeb.PageController do
   end
 
   def awesome_example(conn, _params) do
-    render conn, "awesome.html"
+    domain = Comments.get_domain_by_address("#{conn.host}:#{conn.port}")
+    render conn, "awesome.html", domain: domain
   end
 end

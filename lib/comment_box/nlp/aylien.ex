@@ -6,7 +6,6 @@ defmodule CommentBox.Nlp.Aylien do
     @app_id Application.fetch_env!(:comment_box, CommentBox.Nlp.Aylien)[:app_id]
     
     defp process_url(url), do: build_url url
-    defp build_url("/" <> url), do: @endpoint <> url
     defp build_url(url), do: @endpoint <> url
 
     defp process_request_headers(headers) do

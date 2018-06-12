@@ -19,6 +19,12 @@ defmodule CommentBoxWeb.FallbackController do
     |> render(CommentBoxWeb.ErrorView, :"401")
   end
 
+  def call(conn, {:error, :forbidden}) do
+    conn
+    |> put_status(:forbidden)
+    |> render(CommentBoxWeb.ErrorView, :"403")
+  end
+
   def call(conn, {:error, :not_found}) do
     conn
     |> put_status(:not_found)

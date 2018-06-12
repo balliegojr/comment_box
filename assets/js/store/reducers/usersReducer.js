@@ -18,6 +18,9 @@ const addUser = (state, user) => {
 
 const usersReducer = (state = initialState, action) => {
     switch (action.type) {
+        case actionTypes.CLEAR_USER_DATA:
+            return initialState;
+            
         case actionTypes.SET_LOADING_USERS:
             return expandObject(state, { isLoading: action.payload });
         case actionTypes.SET_LOADEDUSERS:

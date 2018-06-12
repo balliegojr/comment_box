@@ -86,3 +86,10 @@ a {
 .plan-form .img {
     max-height: 100px;
 }
+
+.domain-list .key {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

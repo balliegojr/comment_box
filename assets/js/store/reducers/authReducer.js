@@ -17,8 +17,7 @@ const setTokenReducer = (state, action) => {
 
 const clearUserDataReducer = (state, action) => {
     clearToken();
-    return expandObject(state, { token: null, isAuthenticated: false, current: null });
-
+    return initialState;
 }
 
 

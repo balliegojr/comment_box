@@ -150,4 +150,66 @@ defmodule CommentBox.CommentsTest do
       assert %Ecto.Changeset{} = Comments.change_comment(comment)
     end
   end
+
+  describe "domains" do
+    alias CommentBox.Comments.Domain
+
+    @valid_attrs %{address: "some address", app_key: "some app_key"}
+    @update_attrs %{address: "some updated address", app_key: "some updated app_key"}
+    @invalid_attrs %{address: nil, app_key: nil}
+
+    def domain_fixture(attrs \\ %{}) do
+      {:ok, domain} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Comments.create_domain()
+
+      domain
+    end
+
+    test "list_domains/0 returns all domains" do
+      domain = domain_fixture()
+      assert Comments.list_domains() == [domain]
+    end
+
+    test "get_domain!/1 returns the domain with given id" do
+      domain = domain_fixture()
+      assert Comments.get_domain!(domain.id) == domain
+    end
+
+    test "create_domain/1 with valid data creates a domain" do
+      assert {:ok, %Domain{} = domain} = Comments.create_domain(@valid_attrs)
+      assert domain.address == "some address"
+      assert domain.app_key == "some app_key"
+    end
+
+    test "create_domain/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Comments.create_domain(@invalid_attrs)
+    end
+
+    test "update_domain/2 with valid data updates the domain" do
+      domain = domain_fixture()
+      assert {:ok, domain} = Comments.update_domain(domain, @update_attrs)
+      assert %Domain{} = domain
+      assert domain.address == "some updated address"
+      assert domain.app_key == "some updated app_key"
+    end
+
+    test "update_domain/2 with invalid data returns error changeset" do
+      domain = domain_fixture()
+      assert {:error, %Ecto.Changeset{}} = Comments.update_domain(domain, @invalid_attrs)
+      assert domain == Comments.get_domain!(domain.id)
+    end
+
+    test "delete_domain/1 deletes the domain" do
+      domain = domain_fixture()
+      assert {:ok, %Domain{}} = Comments.delete_domain(domain)
+      assert_raise Ecto.NoResultsError, fn -> Comments.get_domain!(domain.id) end
+    end
+
+    test "change_domain/1 returns a domain changeset" do
+      domain = domain_fixture()
+      assert %Ecto.Changeset{} = Comments.change_domain(domain)
+    end
+  end
 end

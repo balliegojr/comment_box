@@ -27,7 +27,7 @@ export const resize_display = (source, container) => {
 
     var callback = function (mutationsList) {
         const { height } = targetNode.getBoundingClientRect();
-        container.style.height = `${height}px`;
+        container.style.height = `${height + 20}px`;
     };
 
     var observer = new MutationObserver(callback);

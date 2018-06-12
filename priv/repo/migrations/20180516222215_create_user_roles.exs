@@ -14,19 +14,5 @@ defmodule CommentBox.Repo.Migrations.CreateUserRoles do
 
     create index(:user_roles, [:user_id])
     create index(:user_roles, [:role_id])
-
-    flush 
-
-    admin_role = Repo.get_by!(Role, name: "Admin")
-    user = %User{}
-        |> User.changeset(%{username: "admin", email: "admin", password: "admin", password_confirmation: "admin"})
-        |> Ecto.Changeset.put_assoc(:user_roles, [%UserRole{ role: admin_role}])
-
-        |> Repo.insert!()
-
-    # %UserRole{}
-    #   |> UserRole.changeset(%{})
-
-
   end
 end

@@ -39,7 +39,12 @@ class PageDisplay extends Component {
     }
 
     render() {
-        
+        if (this.props.settings.hasError) {
+            return (
+                <div className="alert alert-danger text-center"> <span> Something is wrong, please contact the administrator </span></div>
+            )
+        }
+
         const commentBoxSection = this.props.user.isAuthenticated || this.props.settings.allowAnonymousComment
             ? <CommentBox />
             : <div className="text-center alert alert-info">The owner of this page disabled anonymous comments</div> 
@@ -55,12 +60,12 @@ class PageDisplay extends Component {
                     : <TopContent />
                 }
 
-                { !this.props.settings.isLoaded ? 
-                    <span className="text-center"> loading ... </span> :  
-                    <div>
-                        {commentBoxSection}
-                        {commentsSection}
-                    </div>
+                { this.props.settings.isLoading 
+                    ? <div className="alert alert-info text-center"><span className="text-center"> loading ... </span> </div>
+                    : <div>
+                           {commentBoxSection}
+                           {commentsSection}
+                      </div>
                 }
             </div>
         )
