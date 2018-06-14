@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import AuthenticatedForms from './authentication/authenticationForms'
+import AuthenticationForms from './authentication/authenticationForms'
 import CommentBox from '../components/comments/commentBox'
-import ComentList from './comments/commentList'
+import CommentList from './comments/commentList'
 import TopContent from './comments/topContent'
 
 import * as pageActions from '../store/actions/pageSettingsActions'
 import * as commentActions from '../store/actions/commentActions'
 import * as socketService from '../services/socketService'
 
-class PageDisplay extends Component {
+export class PageDisplay extends Component {
     componentDidMount() {
         this.props.onLoadPageSettings()
     }
@@ -41,7 +41,7 @@ class PageDisplay extends Component {
     render() {
         if (this.props.settings.hasError) {
             return (
-                <div className="alert alert-danger text-center"> <span> Something is wrong, please contact the administrator </span></div>
+                <div className="alert alert-danger text-center"><span>Something is wrong, please contact the administrator</span></div>
             )
         }
 
@@ -50,13 +50,13 @@ class PageDisplay extends Component {
             : <div className="text-center alert alert-info">The owner of this page disabled anonymous comments</div> 
             
         const commentsSection = this.props.user.isAuthenticated || this.props.settings.allowAnonymousView
-            ? <ComentList />
+            ? <CommentList />
             : <div>Not allowed to view comments</div>
         
         return (
             <div>
                 { !this.props.user.isAuthenticated 
-                    ? <AuthenticatedForms />
+                    ? <AuthenticationForms />
                     : <TopContent />
                 }
 
