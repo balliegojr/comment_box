@@ -18,7 +18,4 @@ config :comment_box, CommentBox.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
-config :comment_box, CommentBox.Nlp.Aylien,
-  app_id: nil,
-  secret_key: nil,
-  endpoint: ""
+config :comment_box, :nlp_engine, CommentBox.Nlp.Fake

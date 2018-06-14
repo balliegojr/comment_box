@@ -7,7 +7,7 @@ defmodule CommentBoxWeb.PageSettingsController do
     def get_page_settings(conn, %{ "u" => url, "k" => app_key, "h" => host}) do
         case Comments.get_domain_by_address_and_key(host, app_key) do
             nil -> { :error, :forbidden }
-            domain ->
+            _ ->
                 page_settings = Comments.get_page_by_url_or_create(url)
                 render(conn, "page_settings.json", page_settings: page_settings)
         end

@@ -29,7 +29,7 @@ defmodule CommentBox.Accounts do
 
   ## Examples
 
-      iex> list_users(roles)
+      iex> list_users(["role", "other role"])
       [%User{}, ...]
 
   """
@@ -104,6 +104,18 @@ defmodule CommentBox.Accounts do
     end
   end
 
+  @doc """
+  Updates a user without changing the password.
+
+  ## Examples
+
+      iex> update_user(user, %{field: new_value})
+      {:ok, %User{}}
+
+      iex> update_user(user, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
   def update_user(%User{} = user, attrs) do
     user
     |> User.update_nopassword_changeset(attrs)
@@ -142,6 +154,15 @@ defmodule CommentBox.Accounts do
     |> Repo.update()
   end
 
+  @doc """
+  Updates a user plan and set the role Owner
+
+  ## Examples
+
+      iex> set_user_plan(user, %{"plan" => "plan"})
+      {:ok, %User{}}
+
+  """
   def set_user_plan(%User{} = user, %{ "plan" => plan }) do
     owner_role_id = Repo.one(from r in Role, where: r.name == "Owner", select: r.id)
     owner_user_role = UserRole.changeset(%UserRole{}, %{ user_id: user.id, role_id: owner_role_id })

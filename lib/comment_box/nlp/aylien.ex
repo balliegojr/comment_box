@@ -1,24 +1,30 @@
 defmodule CommentBox.Nlp.Aylien do
+    @behaviour CommentBox.Nlp.NlpEngine
+    
     use HTTPoison.Base
     
-    @endpoint Application.fetch_env!(:comment_box, CommentBox.Nlp.Aylien)[:endpoint]
-    @secret_key Application.fetch_env!(:comment_box, CommentBox.Nlp.Aylien)[:secret_key]
-    @app_id Application.fetch_env!(:comment_box, CommentBox.Nlp.Aylien)[:app_id]
-    
+    @conf Application.get_env(:comment_box, CommentBox.Nlp.Aylien)
+
     defp process_url(url), do: build_url url
-    defp build_url(url), do: @endpoint <> url
+    
+    defp build_url("/" <> url), do: @conf[:endpoint] <> url
+    defp build_url(url), do: @conf[:endpoint] <> url
 
     defp process_request_headers(headers) do
         Enum.concat(headers, [
-            {"X-AYLIEN-TextAPI-Application-Key", @secret_key}, 
-            {"X-AYLIEN-TextAPI-Application-ID", @app_id}
+            {"X-AYLIEN-TextAPI-Application-Key", @conf[:secret_key]}, 
+            {"X-AYLIEN-TextAPI-Application-ID", @conf[:app_id]}
             ])
     end
 
-    def sentiment(text) do
-        get!("/sentiment?" <> URI.encode_query(%{text: text})).body 
+    def sentiment(%{ content: text } = comment, handle_comment_sentment_analysis) do
+        Task.Supervisor.start_child(CommentBox.TaskSupervisor, fn -> 
+            # IO.inspect "/sentiment?" <> URI.encode_query(%{text: text})
+            sentiment = get!("/sentiment?" <> URI.encode_query(%{text: text})).body 
             |> Poison.decode!
             |> Map.take(~w(polarity polarity_confidence))
-            # |> Enum.map(fn({k, v}) -> {String.to_atom(k), v} end)
+            
+            handle_comment_sentment_analysis.(comment, sentiment) 
+        end)
     end
 end

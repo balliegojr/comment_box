@@ -2,6 +2,7 @@ defmodule CommentBox.AccountsTest do
   use CommentBox.DataCase
 
   alias CommentBox.Accounts
+  alias CommentBox.Accounts.Role
 
   describe "users" do
     alias CommentBox.Accounts.User
@@ -20,12 +21,21 @@ defmodule CommentBox.AccountsTest do
     end
 
     test "list_users/0 returns all users" do
-      user = user_fixture() |> Map.merge(%{:password => nil, :password_confirmation => nil})
+      user = user_fixture() |> Map.merge(%{:password => nil, :password_confirmation => nil, :user_roles => []})
       assert Accounts.list_users() == [user]
     end
 
+    test "list_users/1 returns users in given roles" do
+      user = user_fixture() |> Map.merge(%{:password => nil, :password_confirmation => nil, :user_roles => []})
+      assert Accounts.list_users([Role.admin]) == []
+
+      {:ok , user } = Accounts.admin_update_user(user, %{"roles" => [%{"name" => Role.admin, "add" => true}]})
+      [%{ } = admin_user] = Accounts.list_users([Role.admin])
+      assert admin_user.id == user.id
+    end
+
     test "get_user!/1 returns the user with given id" do
-      user = user_fixture() |> Map.merge(%{:password => nil, :password_confirmation => nil})
+      user = user_fixture() |> Map.merge(%{:password => nil, :password_confirmation => nil, :user_roles => []})
       assert Accounts.get_user!(user.id) == user
     end
 
@@ -41,6 +51,28 @@ defmodule CommentBox.AccountsTest do
       assert {:error, %Ecto.Changeset{}} = Accounts.create_user(@invalid_attrs)
     end
 
+    test "update_user/2 with valid data changes user password" do
+      user = user_fixture()
+      hash = user.password_hash
+
+      update_attrs = for {k, v} <- Map.put(@update_attrs, :current_password, "wrong password"),
+        do: {to_string(k), v}, into: %{}
+
+      assert {:error, :unauthorized} = Accounts.update_user(user, update_attrs)
+
+      update_attrs = for {k, v} <- Map.put(@update_attrs, :current_password, "some password"),
+        do: {to_string(k), v}, into: %{}
+
+      assert {:ok, user} = Accounts.update_user(user, update_attrs)
+      assert %User{} = user
+      assert hash != user.password_hash
+      assert user.email == "some updated email"
+      assert user.name == "some updated name"
+      
+      assert user.username == "some updated username"
+    end
+
+
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
       assert {:ok, user} = Accounts.update_user(user, @update_attrs)
@@ -55,7 +87,26 @@ defmodule CommentBox.AccountsTest do
     test "update_user/2 with invalid data returns error changeset" do
       user = user_fixture() |> Map.merge(%{:password => nil, :password_confirmation => nil})
       assert {:error, %Ecto.Changeset{}} = Accounts.update_user(user, @invalid_attrs)
-      assert user == Accounts.get_user!(user.id)
+      assert %{ name: "some name", email: "some email" } = Accounts.get_user!(user.id)
+    end
+
+    test "admin_update_user/2 update user and its roles" do
+      user = user_fixture()
+      
+      update_info = %{
+        "name" => "updated name", 
+        "roles" => [%{"name" => Role.admin, "add" => true}]
+      }
+
+      Accounts.admin_update_user(Accounts.get_user!(user.id), update_info)
+      assert %{ name: "updated name", user_roles: [%{ role: %{ name: "Admin" }}]} = Accounts.get_user!(user.id)
+    end
+
+    test "set_user_plan/2 update user plan and set Onwer role" do
+      user = user_fixture()
+      assert {:ok, %{ plan: "test plan"}} = Accounts.set_user_plan(Accounts.get_user!(user.id), %{"plan" => "test plan"})
+      assert %{ name: "some name", user_roles: [%{ role: %{ name: "Owner" }}]} = Accounts.get_user!(user.id)
+
     end
 
     test "delete_user/1 deletes the user" do
@@ -70,13 +121,13 @@ defmodule CommentBox.AccountsTest do
     end
 
     test "find_by_username/1 returns a user byt its username" do
-      user = user_fixture() |> Map.merge(%{:password => nil, :password_confirmation => nil})
+      user = user_fixture() |> Map.merge(%{:password => nil, :password_confirmation => nil, :user_roles => []})
       assert Accounts.find_by_username(user.username) == user
     end
 
     test "authenticate/2 check a user for its password and return a token" do
       user = user_fixture()
-      assert { :ok, _, _ } = Accounts.authenticate(user, "some password")
+      assert { :ok, _, _ } = Accounts.authenticate(Accounts.get_user!(user.id), "some password")
       assert { :error, :unauthorized} = Accounts.authenticate(user, "wrong password")
     end
   end

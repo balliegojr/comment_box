@@ -57,4 +57,6 @@ config :comment_box, CommentBox.Repo,
   hostname: "localhost",
   pool_size: 10
 
+config :comment_box, :nlp_engine, CommentBox.Nlp.Aylien
+
 import_config "dev.secret.exs"

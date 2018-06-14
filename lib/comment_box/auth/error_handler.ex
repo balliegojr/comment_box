@@ -3,6 +3,7 @@ defmodule CommentBox.Auth.ErrorHandler do
 
   def auth_error(conn, {type, _reason}, _opts) do
     body = Poison.encode!(%{message: to_string(type)})
-    send_resp(conn, 401, body)
+    conn |> put_status(401) |> Phoenix.Controller.json(body)
+    
   end
 end

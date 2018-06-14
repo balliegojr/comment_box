@@ -1,6 +1,5 @@
 defmodule CommentBoxWeb.PageSettingsView do
   use CommentBoxWeb, :view
-  alias CommentBoxWeb.PageSettingsView
 
   def render("page_settings.json", %{page_settings: page_settings}) do
     %{

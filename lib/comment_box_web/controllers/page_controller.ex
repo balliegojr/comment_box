@@ -3,6 +3,8 @@ defmodule CommentBoxWeb.PageController do
 
   alias CommentBox.Comments
 
+  action_fallback CommentBoxWeb.FallbackController
+  
   def index(conn, _params) do
     redirect conn, to: "/examples/awesome"
   end

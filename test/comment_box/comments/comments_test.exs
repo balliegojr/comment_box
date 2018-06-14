@@ -88,7 +88,6 @@ defmodule CommentBox.CommentsTest do
     def comment_fixture(attrs \\ %{}) do
       page = Comments.get_page_by_url_or_create("default url")
 
-
       {:ok, comment} =
         attrs
         |> Enum.into(Map.put(@valid_attrs, :page_id, page.id))
@@ -99,26 +98,35 @@ defmodule CommentBox.CommentsTest do
 
     test "list_comment/0 returns all comment" do
       comment = comment_fixture()
-      assert Comments.list_comment() == [comment]
+      assert [%{ content: "some content", id: comment_id }] = Comments.list_comment()
+      assert comment.id == comment_id
     end
 
     test "list_comment_by_page/1 returns all comments of given page" do
       comment = comment_fixture()
-      assert Comments.list_comment_by_page(comment.page_id) == [comment]
+      assert [%{ content: "some content", id: id }] = Comments.list_comment_by_page(comment.page_id)
+      assert id == comment.id
       assert Comments.list_comment_by_page(0) == []
     end
 
     test "get_comment!/1 returns the comment with given id" do
       comment = comment_fixture()
-      assert Comments.get_comment!(comment.id) == comment
+      assert %{ content: "some content", id: id } = Comments.get_comment!(comment.id) 
+      assert id == comment.id
     end
 
     test "create_comment/1 with valid data creates a comment" do
       page = Comments.get_page_by_url_or_create("default url")
+      valid_attr = Map.put(@valid_attrs, :page_id, page.id)   
       
-      assert {:ok, %Comment{} = comment} = Comments.create_comment(Map.put(@valid_attrs, :page_id, page.id))
-      assert comment.content == "some content"
-      assert comment.status == 42
+      assert {:ok, %Comment{ id: comment_id }} = Comments.create_comment(valid_attr)
+      assert %Comment{ 
+        content: "some content",
+        status: 42,
+        sentiment_polarity: "positive",
+        sentiment_confidence: 0.5
+      } = Comments.get_comment!(comment_id)
+      
     end
 
     test "create_comment/1 with invalid data returns error changeset" do
@@ -136,7 +144,7 @@ defmodule CommentBox.CommentsTest do
     test "update_comment/2 with invalid data returns error changeset" do
       comment = comment_fixture()
       assert {:error, %Ecto.Changeset{}} = Comments.update_comment(comment, @invalid_attrs)
-      assert comment == Comments.get_comment!(comment.id)
+      assert %{ content: "some content" } = Comments.get_comment!(comment.id)
     end
 
     test "delete_comment/1 deletes the comment" do
@@ -151,10 +159,16 @@ defmodule CommentBox.CommentsTest do
     end
   end
 
+  setup %{} do
+    %{ id: user_id} = CommentBoxWeb.AuthenticateHelper.get_default_user()
+    
+    %{ user_id: user_id}
+  end
+
   describe "domains" do
     alias CommentBox.Comments.Domain
 
-    @valid_attrs %{address: "some address", app_key: "some app_key"}
+    @valid_attrs %{address: "some address"}
     @update_attrs %{address: "some updated address", app_key: "some updated app_key"}
     @invalid_attrs %{address: nil, app_key: nil}
 
@@ -167,48 +181,58 @@ defmodule CommentBox.CommentsTest do
       domain
     end
 
-    test "list_domains/0 returns all domains" do
-      domain = domain_fixture()
-      assert Comments.list_domains() == [domain]
+    test "list_domains/1 returns all domains that belongs to a given user", %{ user_id: user_id } do
+      domain = domain_fixture(%{user_id: user_id})
+      assert Comments.list_domains(user_id) == [domain]
     end
 
-    test "get_domain!/1 returns the domain with given id" do
-      domain = domain_fixture()
+    test "get_domain!/1 returns the domain with given id", %{ user_id: user_id } do
+      domain = domain_fixture(%{ user_id: user_id })
       assert Comments.get_domain!(domain.id) == domain
     end
 
-    test "create_domain/1 with valid data creates a domain" do
-      assert {:ok, %Domain{} = domain} = Comments.create_domain(@valid_attrs)
-      assert domain.address == "some address"
-      assert domain.app_key == "some app_key"
+    test "get_domain_by_address/1 returns the domain with given address", %{ user_id: user_id } do
+      domain = domain_fixture(%{ user_id: user_id })
+      assert Comments.get_domain_by_address("some address") == domain
+    end
+
+    test "get_domain_by_address_and_key/2 returns the domain with given address and key", %{ user_id: user_id } do
+      domain = domain_fixture(%{ user_id: user_id })
+      assert Comments.get_domain_by_address_and_key("some address", domain.app_key) == domain
+    end
+
+    test "create_domain/1 with valid data creates a domain", %{ user_id: user_id } do
+      assert {:ok, %Domain{ 
+        address: "some address", 
+        app_key: app_key
+        }} = Comments.create_domain(Enum.into(@valid_attrs, %{ user_id: user_id }))
+      
+      assert app_key
     end
 
     test "create_domain/1 with invalid data returns error changeset" do
       assert {:error, %Ecto.Changeset{}} = Comments.create_domain(@invalid_attrs)
     end
 
-    test "update_domain/2 with valid data updates the domain" do
-      domain = domain_fixture()
-      assert {:ok, domain} = Comments.update_domain(domain, @update_attrs)
-      assert %Domain{} = domain
-      assert domain.address == "some updated address"
-      assert domain.app_key == "some updated app_key"
+    test "update_domain/2 with valid data updates the domain", %{ user_id: user_id } do
+      domain = domain_fixture(%{ user_id: user_id })
+      assert {:ok, %{ address: "some updated address"}} = Comments.update_domain(domain, @update_attrs)
     end
 
-    test "update_domain/2 with invalid data returns error changeset" do
-      domain = domain_fixture()
+    test "update_domain/2 with invalid data returns error changeset", %{ user_id: user_id } do
+      domain = domain_fixture(%{ user_id: user_id })
       assert {:error, %Ecto.Changeset{}} = Comments.update_domain(domain, @invalid_attrs)
       assert domain == Comments.get_domain!(domain.id)
     end
 
-    test "delete_domain/1 deletes the domain" do
-      domain = domain_fixture()
+    test "delete_domain/1 deletes the domain", %{ user_id: user_id } do
+      domain = domain_fixture(%{ user_id: user_id })
       assert {:ok, %Domain{}} = Comments.delete_domain(domain)
       assert_raise Ecto.NoResultsError, fn -> Comments.get_domain!(domain.id) end
     end
 
-    test "change_domain/1 returns a domain changeset" do
-      domain = domain_fixture()
+    test "change_domain/1 returns a domain changeset", %{ user_id: user_id } do
+      domain = domain_fixture(%{ user_id: user_id })
       assert %Ecto.Changeset{} = Comments.change_domain(domain)
     end
   end

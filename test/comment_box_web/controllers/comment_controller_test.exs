@@ -31,16 +31,6 @@ defmodule CommentBoxWeb.CommentControllerTest do
     end
   end
 
-  describe "get_page_comments" do
-    setup [:authenticate]
-
-    test "lists all comments of a given page", %{conn: conn} do
-      page_id = fixture(:page, "www.example.com").id
-      conn = get conn, comment_path(conn, :get_page_comments, page_id)
-      assert json_response(conn, 200) == []
-    end
-  end
-
   describe "create comment" do
     setup [:authenticate]
     
@@ -99,6 +89,16 @@ defmodule CommentBoxWeb.CommentControllerTest do
         {:ok, [conn: conn, user: _]} = authenticate(%{conn: build_conn()}) 
         get conn, comment_path(conn, :show, comment)
       end
+    end
+  end
+
+  describe "get_page_comments" do
+    setup [:authenticate]
+
+    test "lists all comments of a given page", %{conn: conn} do
+      page_id = fixture(:page, "www.example.com").id
+      conn = get conn, comment_path(conn, :get_page_comments, page_id)
+      assert json_response(conn, 200) == []
     end
   end
 

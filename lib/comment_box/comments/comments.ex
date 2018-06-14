@@ -230,7 +230,7 @@ defmodule CommentBox.Comments do
   alias CommentBox.Comments.Domain
 
   @doc """
-  Returns the list of domains.
+  Returns the list of user domains.
 
   ## Examples
 
@@ -260,10 +260,39 @@ defmodule CommentBox.Comments do
   """
   def get_domain!(id), do: Repo.get!(Domain, id)
 
+  @doc """
+  Gets a single domain by its address.
+
+  Return nil if the Domain does not exist.
+
+  ## Examples
+
+      iex> get_domain_by_address("localhost")
+      %Domain{}
+
+      iex> get_domain_by_address("456")
+      nil
+
+  """
   def get_domain_by_address(address) do
-      Repo.get_by(Domain, address: address)
+      Repo.get_by!(Domain, address: address)
+      
   end
 
+  @doc """
+  Gets a single domain by its address and app key.
+
+  Return nil if the Domain does not exist.
+
+  ## Examples
+
+      iex> get_domain_by_address_and_key("localhost", "key")
+      %Domain{}
+
+      iex> get_domain_by_address_and_key("localhost", "invalid key")
+      nil
+
+  """
   def get_domain_by_address_and_key(address, app_key) do
       Repo.get_by(Domain, address: address, app_key: app_key)
   end

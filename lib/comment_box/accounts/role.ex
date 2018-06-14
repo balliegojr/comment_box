@@ -2,6 +2,10 @@ defmodule CommentBox.Accounts.Role do
   use Ecto.Schema
   import Ecto.Changeset
 
+  def admin, do: "Admin"
+  def owner, do: "Owner"
+  def moderator, do: "Moderator"
+
 
   schema "roles" do
     field :name, :string
