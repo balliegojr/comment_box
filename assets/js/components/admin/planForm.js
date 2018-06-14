@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import ValidationComponent from '../validationComponent';
 import { accountActions } from '../../store/actions'
+import withValidation from '../../hoc/withValidation';
 
 
-class PlanForm extends ValidationComponent {
+class PlanForm extends Component {
     constructor(props) {
         super(props);
 
@@ -18,7 +18,7 @@ class PlanForm extends ValidationComponent {
 
     handleSubmit(ev) {
         ev.preventDefault();
-        if (!this.validateForm(this.refs.form)) {
+        if (!this.props.validation.validateForm(this.form)) {
             return;
         }
 
@@ -37,7 +37,7 @@ class PlanForm extends ValidationComponent {
 
     render() {
         return (
-            <form className="plan-form" onSubmit={(ev) => this.handleSubmit(ev)} ref="form">
+            <form className="plan-form" onSubmit={(ev) => this.handleSubmit(ev)} ref={(form) => this.form = form } >
                 <div className="row">
                     <div className="col-sm-12 text-center">
                         <img className="img img-responsive center-block" src={this.props.plan.image} />
@@ -70,4 +70,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PlanForm);
+export default withValidation(connect(mapStateToProps, mapDispatchToProps)(PlanForm));

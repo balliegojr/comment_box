@@ -1,9 +1,8 @@
-import React from 'react'
-import ValidationComponent from '../validationComponent'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { accountActions } from '../../store/actions'
 
-class SigninForm extends ValidationComponent {
+export class SigninForm extends Component {
     constructor(props) {
         super(props);
 

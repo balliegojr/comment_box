@@ -47,11 +47,11 @@ export class PageDisplay extends Component {
 
         const commentBoxSection = this.props.user.isAuthenticated || this.props.settings.allowAnonymousComment
             ? <CommentBox />
-            : <div className="text-center alert alert-info">The owner of this page disabled anonymous comments</div> 
+            : <div className="text-center alert alert-danger">The owner of this page disabled anonymous comments</div> 
             
         const commentsSection = this.props.user.isAuthenticated || this.props.settings.allowAnonymousView
             ? <CommentList />
-            : <div>Not allowed to view comments</div>
+            : <div className="text-center alert alert-danger">Not allowed to view comments</div>
         
         return (
             <div>

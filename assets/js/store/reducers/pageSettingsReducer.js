@@ -9,8 +9,8 @@ const initialState = {
 
 const pageSettingsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.CLEAR_USER_DATA:
-            return initialState;
+        // case actionTypes.CLEAR_USER_DATA:
+        //     return initialState;
         case actionTypes.LOADING_PAGESETTINGS:
             return expandObject(state, { isLoading: action.payload });
         case actionTypes.SET_PAGESETTINGS:

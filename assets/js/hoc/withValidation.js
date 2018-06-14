@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 
-export default class ValidationComponent extends Component {
-    constructor(props) {
-        super(props);
-
-        this.validateForm = this.validateForm.bind(this);
-        this.validateField = this.validateField.bind(this);
-        this.errors = {};
-    }
+class Validator {
+    errors = {};
     _setErrorMessage(element, message) {
         element.labels.forEach(label => {
             if (label.classList.contains("error-message")) {
@@ -100,7 +94,7 @@ export default class ValidationComponent extends Component {
         return false;
     }
 
-    validateForm(form) {
+    form(form) {
         if (form.checkValidity()) {
             return true;
         }
@@ -109,7 +103,7 @@ export default class ValidationComponent extends Component {
         return elements.every(elm => this._isValid(elm));
     }
 
-    validateField(ev) {
+    field(ev) {
         return this._isValid(ev.target);
     }
 
@@ -120,3 +114,29 @@ export default class ValidationComponent extends Component {
 
     }
 }
+
+const withValidation = (WrappedComponent) => {
+    class WithValidation extends Component {
+        static displayName = `WithValidation(${WrappedComponent.displayName ||
+            WrappedComponent.name ||
+            'Component'})`
+
+        constructor(props) {
+            super(props);
+
+            this.validator = new Validator();
+        }
+
+        render() {
+            return (
+                <WrappedComponent {...this.props} 
+                    validation={this.validator} 
+                />
+            )
+        }
+    }
+
+    return WithValidation;
+}
+
+export default withValidation;

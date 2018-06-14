@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { cloneObject, expandObject } from '../../utility';
-import ValidationComponent from '../validationComponent';
 import { accountActions, usersActions } from '../../store/actions';
+import withValidation from '../../hoc/withValidation';
 
-class Account extends ValidationComponent {
+class Account extends Component {
     constructor(props) {
         super(props);
 
@@ -30,7 +30,7 @@ class Account extends ValidationComponent {
 
     handleSubmit(ev) {
         ev.preventDefault();
-        if (!this.validateForm(this.refs.form)){
+        if (!this.props.validation.validateForm(this.form)){
             return;
         }
 
@@ -59,7 +59,7 @@ class Account extends ValidationComponent {
                 this.setState({ saving: false });
                 if (reason.errors) {
                     for (let target in reason.errors) {
-                        this.setError(this.refs.form, target, reason.errors[target]);
+                        this.props.validation.setError(this.form, target, reason.errors[target]);
                     }
                 }
             });
@@ -71,7 +71,7 @@ class Account extends ValidationComponent {
 
     render() {
         return (
-            <form onSubmit={(ev) => this.handleSubmit(ev)} ref="form">
+            <form onSubmit={(ev) => this.handleSubmit(ev)} ref={(form) => this.form = form}>
                 <div className=" text-right">
                     <h5 className="h4">
                         Account Settings
@@ -96,7 +96,7 @@ class Account extends ValidationComponent {
                         <div className="col-sm-10">
                             <input className="form-control" value={this.state.username} name="username" id="username"
                                 onChange={this.handleChange} 
-                                onBlur={this.validateField}
+                                onBlur={(ev) => this.props.validation.validateField(ev)}
                                 required="true"
                                 minLength="3"
                                 validate="true" />
@@ -113,7 +113,7 @@ class Account extends ValidationComponent {
                             <input className="form-control" value={this.state.email} name="email" id="email"
                                 type="email"
                                 onChange={this.handleChange} 
-                                onBlur={this.validateField} 
+                                onBlur={(ev) => this.props.validation.validateField(ev)}
                                 required="true" />
                             <label className="error-message" htmlFor="email"></label>
                                 
@@ -139,7 +139,8 @@ class Account extends ValidationComponent {
                             <input className="form-control" value={this.state.current_password} name="current_password" id="current_password"
                                 type="password"
                                 onChange={this.handleChange}
-                                onBlur={this.validateField} />
+                                onBlur={(ev) => this.props.validation.validateField(ev)}
+                                />
                             <label className="error-message" htmlFor="current_password"></label>
                         </div>
                     </div>
@@ -152,7 +153,7 @@ class Account extends ValidationComponent {
                             <input className="form-control" value={this.state.password} name="password" id="password"
                                 type="password"
                                 onChange={this.handleChange}
-                                onBlur={this.validateField}
+                                onBlur={(ev) => this.props.validation.validateField(ev)}
                                 minLength="6" />
                             <label className="error-message" htmlFor="password"></label>
                         </div>
@@ -166,7 +167,7 @@ class Account extends ValidationComponent {
                             <input className="form-control" value={this.state.password_confirmation} name="password_confirmation" id="password_confirmation"
                                 type="password"
                                 onChange={this.handleChange}
-                                onBlur={this.validateField}
+                                onBlur={(ev) => this.props.validation.validateField(ev)}
                                 minLength="6" 
                                 match="password"/>
                             <label className="error-message" htmlFor="password_confirmation"></label>
@@ -200,4 +201,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Account);
+export default withValidation(connect(mapStateToProps, mapDispatchToProps)(Account));

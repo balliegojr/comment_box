@@ -1,11 +1,9 @@
-import React from 'react'
-import ValidationComponent from '../validationComponent'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { accountActions } from '../../store/actions'
+import withValidation from '../../hoc/withValidation';
 
-
-
-class SignUpForm extends ValidationComponent {
+export class SignUpForm extends Component {
     constructor(props) {
         super(props);
 
@@ -23,7 +21,7 @@ class SignUpForm extends ValidationComponent {
     handleSubmit(ev) {
         ev.preventDefault();
 
-        if (!this.validateForm(this.refs.form)){
+        if (!this.props.validation.form(this.form)){
             return;
         }
 
@@ -42,7 +40,7 @@ class SignUpForm extends ValidationComponent {
                 this.setState({ sending: false });
                 if (reason.errors) {
                     for (let target in reason.errors) {
-                        this.setError(this.refs.form, target, reason.errors[target]);
+                        this.props.validation.setError(this.form, target, reason.errors[target]);
                     }
                 }
             });
@@ -55,7 +53,7 @@ class SignUpForm extends ValidationComponent {
 
     render() {
         return (
-            <form onSubmit={(ev) => this.handleSubmit(ev)} disabled={this.state.sending} ref="form">
+            <form onSubmit={(ev) => this.handleSubmit(ev)} disabled={this.state.sending} ref={(form) => this.form = form}>
                 <div className="row form-group">
 
                     <div className="col-xs-6">
@@ -67,7 +65,7 @@ class SignUpForm extends ValidationComponent {
                             name="username" 
                             value={this.state.username} 
                             onChange={this.handleChange}
-                            onBlur={this.validateField} 
+                            onBlur={(ev) => this.props.validation.field(ev)} 
                             required="true"
                             minLength="3"
                             validate="true" />
@@ -75,18 +73,49 @@ class SignUpForm extends ValidationComponent {
 
                     </div>
                     <div className="col-xs-6">
-                        <input id="email" className="form-control" type="email" placeholder="Email" name="email" value={this.state.email} onChange={this.handleChange} onBlur={this.validateField} required />
+                        <input 
+                            id="email"
+                            className="form-control"
+                            type="email"
+                            placeholder="Email"
+                            name="email"
+                            value={this.state.email}
+                            onChange={this.handleChange}
+                            onBlur={(ev) => this.props.validation.field(ev)}
+                            required />
                         <label className="error-message" htmlFor="email"></label>
                     </div>
                 </div>
 
                 <div className="row form-group">
                     <div className="col-xs-6">
-                        <input id="password"className="form-control" type="password" placeholder="Password" name="password" value={this.state.password} onChange={this.handleChange} onBlur={this.validateField} required minLength="6" />
+                        <input 
+                            id="password"
+                            className="form-control"
+                            type="password"
+                            placeholder="Password"
+                            name="password"
+                            value={this.state.password}
+                            onChange={this.handleChange}
+                            onBlur={(ev) => this.props.validation.field(ev)}
+                            required
+                            minLength="6" />
                         <label className="error-message" htmlFor="password"></label>
                     </div>
                     <div className="col-xs-6">
-                        <input id="password_confirmation" className="form-control" type="password" placeholder="Password Confirmation" name="password_confirmation" value={this.state.password_confirmation} onBlur={this.validateField} onChange={this.handleChange} required minLength="6" match="password" />
+                        <input
+                            id="password_confirmation"
+                            className="form-control"
+                            type="password"
+                            placeholder="Password
+                            Confirmation"
+                            name="password_confirmation"
+                            value={this.state.password_confirmation}
+                            onBlur={(ev) => this.props.validation.field(ev)}
+                            onChange={this.handleChange}
+                            required
+                            minLength="6"
+                            match="password" />
                         <label className="error-message" htmlFor="password_confirmation"></label>
                     </div>
                 </div>
@@ -108,4 +137,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(SignUpForm);
+export default withValidation(connect(null, mapDispatchToProps)(SignUpForm));

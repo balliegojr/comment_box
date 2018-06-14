@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addNewDomain } from '../../store/actions/domainActions';
-import ValidationComponent from '../validationComponent';
 
-class NewDomainForm extends ValidationComponent {
+class NewDomainForm extends Component {
     constructor(props) {
         super(props);
 
