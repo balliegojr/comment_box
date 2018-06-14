@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { authActions } from '../../store/actions'
+import { accountActions } from '../../store/actions'
 
-class TopContent extends Component {
+export class TopContent extends Component {
     handleSignOut() {
         this.props.doSignOut();
     }
@@ -28,7 +28,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        doSignOut: () => dispatch(authActions.signout())
+        doSignOut: () => dispatch(accountActions.signout())
     }
 }
 

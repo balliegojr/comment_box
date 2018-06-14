@@ -3,7 +3,7 @@ import Comment from "./comment";
 import * as commentActions from "../../store/actions/commentActions";
 import { connect } from "react-redux";
 
-class CommentList extends React.Component {
+export class CommentList extends React.Component {
     componentDidMount() {
         this.props.onLoadComments();
     }
@@ -12,7 +12,7 @@ class CommentList extends React.Component {
     render() {
         if (this.props.comments.loadedComments.length === 0) {
             return (
-                <ul className="comments">
+                <ul className="comments alert alert-info text-center">
                     There are no comments yet
                 </ul>
             )

@@ -14,7 +14,7 @@ export default class Comment extends React.Component {
             <li className={commentClasses.join(" ")}>
                 <div className="row">
                     <div className="col-xs-12">
-                        <small> <b> {this.props.comment.user ? this.props.comment.user.username : "Anonymous"} </b></small>
+                        <small> <b>{this.props.comment.user ? this.props.comment.user.username : "Anonymous"}</b></small>
                         <span> - </span>
                         <small title={comment_time.format('L LT')}>{comment_time.fromNow()}</small>
                          

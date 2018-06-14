@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { saveComment } from '../../store/actions/commentActions';
 
-class CommentBox extends Component {
+import Notifiable from "../../hoc/notifiable";
+
+export class CommentBox extends Component {
     constructor(props) {
         super(props);
 
@@ -12,7 +14,7 @@ class CommentBox extends Component {
         }
     }
     handleCommentChange(ev) {
-        const content = ev.currentTarget.value;
+        const content = ev.target.value;
         if (content.length > this.props.pageSettings.commentSizeLimit){
             return
         }
@@ -27,7 +29,7 @@ class CommentBox extends Component {
             .then(() => { 
                 this.setState({ content: "", contentSize: 0});
             }, (reason) => { 
-                
+                this.props.notifiable.error("Oops, something went wrong");
             });
     }
 
@@ -58,4 +60,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(CommentBox);
+export default Notifiable(connect(mapStateToProps,mapDispatchToProps)(CommentBox));

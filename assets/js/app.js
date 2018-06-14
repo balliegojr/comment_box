@@ -7,7 +7,7 @@
 // in vendor, which are never wrapped in imports and
 // therefore are always executed.
 
-import css from '../css/app.css';
+import '../css/app.css';
 
 // Import dependencies
 //
@@ -19,6 +19,7 @@ import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
+import { ToastContainer } from 'react-toastify';
 
 // Import local files
 //
@@ -46,7 +47,10 @@ const rootReducer = combineReducers({
 const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
 ReactDOM.render(
     <Provider store={store}>
-        <PageDisplay />
+        <React.Fragment>
+            <PageDisplay />
+            <ToastContainer position={"bottom-center"} />
+        </React.Fragment>
     </Provider>,
     document.getElementById('hello-react')
 )
