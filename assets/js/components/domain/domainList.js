@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadDomains, deleteDomain } from '../../store/actions/domainActions';
 import NewDomainForm from './newDomainForm';
+import notifiable from '../../hoc/notifiable';
 
-const DomainRow = ({ domain, canDelete, handleDelete, handleCopy }) => {
+export const DomainRow = ({ domain, canDelete, handleDelete, handleCopy }) => {
     return (
         <tr>
             <td> {domain.address} </td>
@@ -18,9 +19,26 @@ const DomainRow = ({ domain, canDelete, handleDelete, handleCopy }) => {
     )
 }
 
+export class CopyKey extends Component {
+    componentDidMount() {
+        this.copyContent();
+    }
+    copyContent() {
+        this.input.select();
+        document.execCommand("copy");
+    }
 
+    render() {
+        return (
+            <div>
+                Key copied to your clipboard!!!
+                <input value={this.props.appKey} style={{ position: 'absolute', left: '-9999px'}} readOnly="true" ref={(input) => this.input = input } />
+            </div>
+        );
+    }
+}
 
-class DomainList extends Component {
+export class DomainList extends Component {
     constructor(props){
         super(props);
 
@@ -35,7 +53,7 @@ class DomainList extends Component {
     }
 
     handleCopy(key) {
-        
+        this.props.notifiable.info(<CopyKey appKey={key} />);
     }
 
     handleDelete(domain_id) {
@@ -53,7 +71,15 @@ class DomainList extends Component {
 
     render() {
         const canDelete = this.props.domains.length > 1;
-        const domains = this.props.domains.map(domain => <DomainRow key={domain.id} domain={domain} canDelete={canDelete} handleDelete={this.handleDelete} handleCopy={this.handleCopy} />)
+        const domains = this.props.domains.map(domain => (
+            <DomainRow 
+                key={domain.id}
+                domain={domain}
+                canDelete={canDelete}
+                handleDelete={this.handleDelete}
+                handleCopy={this.handleCopy}
+                />
+        ));
         
         return (
             <div className="domain-list"> 
@@ -96,4 +122,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DomainList);
+export default notifiable(connect(mapStateToProps, mapDispatchToProps)(DomainList));

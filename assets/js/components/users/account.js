@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { cloneObject, expandObject } from '../../utility';
+import { cloneObject, expandObject, defaultHandleChange } from '../../utility';
 import { accountActions, usersActions } from '../../store/actions';
 import withValidation from '../../hoc/withValidation';
 
@@ -20,17 +20,12 @@ class Account extends Component {
             this.state = expandObject(user, { password: '', password_confirmation: '', current_password: '' });
         }
         
-        this.handleChange = this.handleChange.bind(this);
-    }
-
-    handleChange(ev) {
-        const { name, value } = ev.target;
-        this.setState({ [name]: value });
+        this.handleChange = defaultHandleChange(this);
     }
 
     handleSubmit(ev) {
         ev.preventDefault();
-        if (!this.props.validation.validateForm(this.form)){
+        if (!this.props.validation.form(this.form)){
             return;
         }
 
@@ -96,7 +91,7 @@ class Account extends Component {
                         <div className="col-sm-10">
                             <input className="form-control" value={this.state.username} name="username" id="username"
                                 onChange={this.handleChange} 
-                                onBlur={(ev) => this.props.validation.validateField(ev)}
+                                onBlur={(ev) => this.props.validation.field(ev)}
                                 required="true"
                                 minLength="3"
                                 validate="true" />
@@ -113,7 +108,7 @@ class Account extends Component {
                             <input className="form-control" value={this.state.email} name="email" id="email"
                                 type="email"
                                 onChange={this.handleChange} 
-                                onBlur={(ev) => this.props.validation.validateField(ev)}
+                                onBlur={(ev) => this.props.validation.field(ev)}
                                 required="true" />
                             <label className="error-message" htmlFor="email"></label>
                                 
@@ -139,7 +134,7 @@ class Account extends Component {
                             <input className="form-control" value={this.state.current_password} name="current_password" id="current_password"
                                 type="password"
                                 onChange={this.handleChange}
-                                onBlur={(ev) => this.props.validation.validateField(ev)}
+                                onBlur={(ev) => this.props.validation.field(ev)}
                                 />
                             <label className="error-message" htmlFor="current_password"></label>
                         </div>
@@ -153,7 +148,7 @@ class Account extends Component {
                             <input className="form-control" value={this.state.password} name="password" id="password"
                                 type="password"
                                 onChange={this.handleChange}
-                                onBlur={(ev) => this.props.validation.validateField(ev)}
+                                onBlur={(ev) => this.props.validation.field(ev)}
                                 minLength="6" />
                             <label className="error-message" htmlFor="password"></label>
                         </div>
@@ -167,7 +162,7 @@ class Account extends Component {
                             <input className="form-control" value={this.state.password_confirmation} name="password_confirmation" id="password_confirmation"
                                 type="password"
                                 onChange={this.handleChange}
-                                onBlur={(ev) => this.props.validation.validateField(ev)}
+                                onBlur={(ev) => this.props.validation.field(ev)}
                                 minLength="6" 
                                 match="password"/>
                             <label className="error-message" htmlFor="password_confirmation"></label>

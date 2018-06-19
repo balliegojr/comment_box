@@ -13,7 +13,7 @@ describe("<TopContent />", () => {
     });
 
     it("should render username and a Sign out button", () => {
-        expect(wrapper.find("a").text()).toEqual("Sign out");
+        expect(wrapper.find("a").last().text()).toEqual("Sign out");
         expect(wrapper.find("b").text()).toEqual("");
 
         wrapper.setProps({ user: { username: "user name"}});
@@ -25,7 +25,7 @@ describe("<TopContent />", () => {
         let signOutFn = jest.fn();
         wrapper.setProps({ doSignOut: signOutFn });
         
-        wrapper.find("a").simulate("click");
+        wrapper.find("a").last().simulate("click");
         expect(signOutFn).toHaveBeenCalled();
     })
 });

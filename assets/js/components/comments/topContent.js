@@ -10,7 +10,7 @@ export class TopContent extends Component {
         return (
             <div className="row">
                 <div className="col-xs-6">
-                    <b>{this.props.user ? this.props.user.username : ""}</b>
+                    <a href="/admin/account" target="_blank"><b>{this.props.user ? this.props.user.username : ""}</b></a>
                 </div>
                 <div className="col-xs-6 text-right">
                     <a onClick={() => this.handleSignOut()}>Sign out</a>

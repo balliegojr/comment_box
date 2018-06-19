@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { usersActions } from '../../store/actions';
+import { defaultHandleChange } from '../../utility';
 
 const server_roles = "Admin Owner Moderator".split(" ");
 
@@ -14,7 +15,7 @@ class UserEdit extends Component {
             name: ""
         }
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange = defaultHandleChange(this);
     }
 
     componentWillReceiveProps(received_props) {
@@ -87,11 +88,6 @@ class UserEdit extends Component {
         }
 
         this.setState({ user_roles: user_roles});
-    }
-
-    handleChange(ev) {
-        const { name, value } = ev.target;
-        this.setState({ [name]: value });
     }
 
     render() {

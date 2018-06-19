@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { addNewDomain } from '../../store/actions/domainActions';
+import { defaultHandleChange } from '../../utility';
+import notifiable from '../../hoc/notifiable';
 
-class NewDomainForm extends Component {
+export class NewDomainForm extends Component {
     constructor(props) {
         super(props);
 
@@ -10,12 +12,9 @@ class NewDomainForm extends Component {
             domain: ''
         };
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange = defaultHandleChange(this);
     }
-    handleChange(ev) {
-        const { name, value } = ev.target;
-        this.setState({ [name]: value });
-    }
+    
     handleSubmit(ev) {
         ev.preventDefault();
 
@@ -24,6 +23,8 @@ class NewDomainForm extends Component {
                 if (this.props.onHideForm) {
                     this.props.onHideForm();
                 }
+            }, () => {
+                this.props.notifiable.error("Oops, something went wrong");
             });
 
     }
@@ -62,4 +63,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null, mapDispatchToProps)(NewDomainForm);
+export default notifiable(connect(null, mapDispatchToProps)(NewDomainForm));

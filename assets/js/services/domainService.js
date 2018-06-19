@@ -1,13 +1,12 @@
 import axios from 'axios';
+import { errorMessage } from '../utility';
 
 export function getDomains() {
     return new Promise((resolve, reject) => {
         axios.get(`/api/domain`)
             .then((domains) => {
                 resolve(domains.data);
-            }, reason => {
-                reject(reason.response.data);
-            });
+            }, reason => reject(errorMessage(reason)));
     });
 }
 
@@ -17,9 +16,7 @@ export function deleteDomain(domain_id) {
         axios.delete(`/api/domain/${domain_id}`)
             .then(() => {
                 resolve();
-            }, reason => {
-                reject(reason.response.data);
-            });
+            }, reason => reject(errorMessage(reason)));
     });
 }
 
@@ -28,8 +25,6 @@ export function createDomain(domain_info) {
         axios.post(`/api/domain`, { domain: domain_info })
             .then((domain) => {
                 resolve(domain.data);
-            }, reason => {
-                reject(reason.response.data);
-            });
+            }, reason => reject(errorMessage(reason)));
     });
 }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { errorMessage } from '../utility';
 
 export function setHeader(access_token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
@@ -29,7 +30,7 @@ export function signin(username, password) {
                 // setToken(tokenData.data.access_token);
                 // setHeader(tokenData.data.access_token);
                 resolve(tokenData.data.access_token);
-            }, (reason) => reject(reason.response.data));
+            }, (reason) => reject(errorMessage(reason)));
 
     })
 }
@@ -41,7 +42,7 @@ export function signup(userInfo) {
                 // setToken(tokenData.data.access_token);
                 // setHeader(tokenData.data.access_token);
                 resolve(tokenData.data.access_token);
-            }, (reason) => reject(reason.response.data));
+            }, (reason) => reject(errorMessage(reason)));
     });
 }
 
@@ -58,7 +59,7 @@ export function updateAccount(user_info) {
         axios.put(`/api/user/${user_info.id}`, { user: user_info })
             .then((saved_info) => {
                 resolve(saved_info.data);
-            }, (reason) => reject(reason.response.data));
+            }, (reason) => reject(errorMessage(reason)));
     });
 }
 
@@ -67,6 +68,6 @@ export function joinPlan(plan_info) {
         axios.put(`/api/user/plan`, { plan: plan_info})
             .then((saved_info) => {
                 resolve(saved_info.data);
-            }, (reason) => reject(reason.response.data));
+            }, (reason) => reject(errorMessage(reason)));
     })
 }

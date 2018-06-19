@@ -44,6 +44,7 @@ import DomainList from './components/domain/domainList';
 import { redux_logger } from './utility';
 import { Authenticated, Anonymous, Role, AuthenticatedRoute } from './components/authorization';
 import AuthenticationForms from './components/authentication/authenticationForms';
+import { ToastContainer } from 'react-toastify';
 
 socketService.connect();
 
@@ -59,28 +60,31 @@ const store = createStore(rootReducer, compose(applyMiddleware(redux_logger, thu
 // const store = createStore(rootReducer, compose(applyMiddleware(thunk)));
 ReactDOM.render(
     <Provider store={store}>
-        <BrowserRouter basename="/admin/">
-            <div >
-                <AdminHeader />
-                <div className="container">
-                    <Anonymous>
-                        <AuthenticationForms />
-                    </Anonymous>
-                    
-                    <Switch>
-                        <AuthenticatedRoute roles={["Admin"]} path="/users/:id" exact component={UserEdit} />
-                        <AuthenticatedRoute roles={["Admin"]} path="/users" exact component={UserList} />
+        <React.Fragment>
+            <BrowserRouter basename="/admin/">
+                <div >
+                    <AdminHeader />
+                    <div className="container">
+                        <Anonymous>
+                            <AuthenticationForms />
+                        </Anonymous>
                         
-                        <AuthenticatedRoute path="/account" component={Account} />
-                        
-                        <AuthenticatedRoute roles={["Owner"]} path="/domains" component={DomainList} />
-                        <AuthenticatedRoute roles={["Owner"]} path="/pages" render={() => (<div>Pages page</div>)} />
-                        <AuthenticatedRoute path="/comments" render={() => (<div>Comments page</div>)} />
-                        <AuthenticatedRoute path="/" exact component={AdminHome} />
-                    </Switch>
+                        <Switch>
+                            <AuthenticatedRoute roles={["Admin"]} path="/users/:id" exact component={UserEdit} />
+                            <AuthenticatedRoute roles={["Admin"]} path="/users" exact component={UserList} />
+                            
+                            <AuthenticatedRoute path="/account" component={Account} />
+                            
+                            <AuthenticatedRoute roles={["Owner"]} path="/domains" component={DomainList} />
+                            <AuthenticatedRoute roles={["Owner"]} path="/pages" render={() => (<div>Pages page</div>)} />
+                            <AuthenticatedRoute path="/comments" render={() => (<div>Comments page</div>)} />
+                            <AuthenticatedRoute path="/" exact component={AdminHome} />
+                        </Switch>
+                    </div>
                 </div>
-            </div>
-        </BrowserRouter>
+            </BrowserRouter>
+            <ToastContainer position={"top-center"} />
+        </React.Fragment>
     </Provider>,
     document.getElementById('hello-react')
 )

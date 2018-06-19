@@ -44,3 +44,14 @@ export const redux_logger = store => {
         }
     }
 };
+
+export function handleChange(ev) {
+    const { name, value } = ev.target;
+    this.setState({ [name]: value });
+}
+
+export const defaultHandleChange = (binder) => {
+    return handleChange.bind(binder);
+}
+
+export const errorMessage = (reason) => reason.response ? reason.response.data : reason.message;

@@ -5,7 +5,7 @@ import { Link, NavLink } from 'react-router-dom'
 import { Role, Authenticated } from '../authorization'
 import { accountActions } from '../../store/actions'
 
-class AdminHeader extends Component {
+export class AdminHeader extends Component {
     
     
     handleDropdownToggle(ev) {
@@ -25,10 +25,7 @@ class AdminHeader extends Component {
     }
 
     handleSignout() {
-        console.log('signout')
-        
         this.props.doSignOut();
-        
     }
 
     render() {

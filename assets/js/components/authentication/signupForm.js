@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { accountActions } from '../../store/actions'
 import withValidation from '../../hoc/withValidation';
+import { defaultHandleChange } from '../../utility';
 
 export class SignUpForm extends Component {
     constructor(props) {
@@ -15,7 +16,7 @@ export class SignUpForm extends Component {
             password_confirmation: ""
         }
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange = defaultHandleChange(this);
     }
 
     handleSubmit(ev) {
@@ -44,11 +45,6 @@ export class SignUpForm extends Component {
                     }
                 }
             });
-    }
-
-    handleChange(ev) {
-        const { name, value } = ev.target;
-        this.setState({ [name]: value});
     }
 
     render() {

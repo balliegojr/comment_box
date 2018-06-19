@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { errorMessage } from '../utility';
 
 export function getUsers(userType) {
     if (userType) {
@@ -18,6 +19,6 @@ export function saveUserFromAdmin(user_info) {
         axios.put(`/api/user/${user_info.id}/admin`, { user: user_info })
             .then(saved_info => {
                 resolve(saved_info.data);
-            }, reason => reject(reason)) 
+            }, reason => reject(errorMessage(reason))) 
     });
 }

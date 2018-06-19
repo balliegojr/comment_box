@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Role } from '../authorization';
 import PlanChooser from './planChooser';
 import PlanForm from './planForm';
 
-class Home extends Component {
+export default class Home extends Component {
     constructor(props) {
         super(props);
 
@@ -44,13 +43,3 @@ class Home extends Component {
         )
     }
 }
-
-const mapStateToProps = (state) => {
-    return {}
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);

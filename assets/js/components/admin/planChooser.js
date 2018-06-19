@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 
-const Plan = (props) => {
+export const Plan = (props) => {
     return (
         <div className={"plan panel panel-" + props.plan.class}>
             <div className="panel-heading">

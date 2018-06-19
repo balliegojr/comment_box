@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 
 import { accountActions } from '../../store/actions'
 import withValidation from '../../hoc/withValidation';
+import notifiable from '../../hoc/notifiable';
+import { defaultHandleChange } from '../../utility';
 
 
-class PlanForm extends Component {
+export class PlanForm extends Component {
     constructor(props) {
         super(props);
 
@@ -13,12 +15,12 @@ class PlanForm extends Component {
             domain: ''
         }
 
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange = defaultHandleChange(this);
     }
 
     handleSubmit(ev) {
         ev.preventDefault();
-        if (!this.props.validation.validateForm(this.form)) {
+        if (!this.props.validation.form(this.form)) {
             return;
         }
 
@@ -26,13 +28,8 @@ class PlanForm extends Component {
             .then(() => {
                 
             }, (reason) => {
-                
+                this.props.notifiable.error('Oops, something went wrong');
             });
-    }
-
-    handleChange(ev) {
-        const { name, value } = ev.target;
-        this.setState({ [name]: value});
     }
 
     render() {
@@ -70,4 +67,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withValidation(connect(mapStateToProps, mapDispatchToProps)(PlanForm));
+export default notifiable(withValidation(connect(mapStateToProps, mapDispatchToProps)(PlanForm)));
