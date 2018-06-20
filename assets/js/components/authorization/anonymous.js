@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 
-class Anonymous extends Component {
+export class Anonymous extends Component {
     render() {
         if (this.props.user.isAuthenticated) {
             return null

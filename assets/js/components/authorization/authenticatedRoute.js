@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 
-class AuthenticatedRoute extends Component {
+export class AuthenticatedRoute extends Component {
     validateAccess(roles) {
         if (!this.props.user.isAuthenticated) {
             return false;

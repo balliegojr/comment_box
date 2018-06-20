@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 
-class Authenticated extends Component {
+export class Authenticated extends Component {
     render() {
         if (!this.props.user.isAuthenticated) {
             return null

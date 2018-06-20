@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 
-class Role extends Component {
+export class Role extends Component {
     render() {
         if (this.props.user.current) {
             if (
