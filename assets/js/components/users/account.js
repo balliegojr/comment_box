@@ -3,8 +3,9 @@ import { connect } from 'react-redux';
 import { cloneObject, expandObject, defaultHandleChange } from '../../utility';
 import { accountActions, usersActions } from '../../store/actions';
 import withValidation from '../../hoc/withValidation';
+import notifiable from '../../hoc/notifiable';
 
-class Account extends Component {
+export class Account extends Component {
     constructor(props) {
         super(props);
 
@@ -49,7 +50,7 @@ class Account extends Component {
         this.props.doUpdateAccount(user_info)
             .then(() => {
                 this.setState({ saving: false, current_password: '', password: '', password_confirmation: '' });
-                
+                this.props.notifiable.info('Account updated');
             }, (reason) => {
                 this.setState({ saving: false });
                 if (reason.errors) {
@@ -196,4 +197,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default withValidation(connect(mapStateToProps, mapDispatchToProps)(Account));
+export default notifiable(withValidation(connect(mapStateToProps, mapDispatchToProps)(Account)));

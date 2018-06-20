@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { usersActions } from '../../store/actions';
 import { defaultHandleChange } from '../../utility';
+import notifiable from '../../hoc/notifiable';
 
 const server_roles = "Admin Owner Moderator".split(" ");
 
-class UserEdit extends Component {
+export class UserEdit extends Component {
     constructor(props) {
         super(props);
 
@@ -22,7 +23,7 @@ class UserEdit extends Component {
         if (received_props.user) {
             this.setState({ 
                 user_roles: received_props.user.roles.map(r => r.name),
-                name: received_props.name,
+                name: received_props.user.name,
                 account_status: received_props.user.account_status || 0
             });
         }
@@ -73,7 +74,8 @@ class UserEdit extends Component {
                 
                 this.props.history.goBack();
             }, reason => {
-                this.setState({ saving: false, error: "An error has ocurred, please try again" });
+                this.setState({ saving: false});
+                this.props.notifiable.error('Oops, something went wrong!');
             });
     }
 
@@ -156,7 +158,7 @@ class UserEdit extends Component {
                             <label className="control-label"> Name </label>
                         </div>
                         <div className="col-sm-10">
-                            <input className="form-control" value={this.props.user.name} name="name" onChange={this.handleChange} />
+                            <input className="form-control" value={this.state.name} name="name" onChange={this.handleChange} />
                         </div>
                     </div>
 
@@ -208,4 +210,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserEdit);
+export default notifiable(connect(mapStateToProps, mapDispatchToProps)(UserEdit));

@@ -28,7 +28,7 @@ const UserRow = (props) => {
 }
 
 
-class UserList extends Component {
+export class UserList extends Component {
     constructor(props) { 
         super(props)
 
@@ -37,7 +37,7 @@ class UserList extends Component {
         }
     }
     componentDidMount() {
-        this.props.doLoadusers(this.state.currentUserType);
+        this.props.doLoadUsers(this.state.currentUserType);
     }
 
     handleChangeUserType(newType) {
@@ -46,7 +46,7 @@ class UserList extends Component {
         }
 
         this.setState({ currentUserType: newType });
-        this.props.doLoadusers(newType);
+        this.props.doLoadUsers(newType);
     }
 
 
@@ -109,7 +109,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        doLoadusers: (userType) => dispatch(usersActions.loadUsers(userType))
+        doLoadUsers: (userType) => dispatch(usersActions.loadUsers(userType))
     }
 }
 
