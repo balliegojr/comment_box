@@ -1,6 +1,7 @@
 defmodule CommentBox.Comments.Page do
   use Ecto.Schema
   import Ecto.Changeset
+  alias CommentBox.Comments.Domain
 
 
   schema "pages" do
@@ -8,10 +9,13 @@ defmodule CommentBox.Comments.Page do
     field :status, :integer
     field :url, :string
     field :hashed_url, :string
+    
     field :allowAnonymousComments, :boolean
     field :allowAnonymousView, :boolean
-    
+    field :allowComments, :boolean
 
+    belongs_to :domain, Domain
+    
     timestamps()
   end
 
@@ -20,7 +24,7 @@ defmodule CommentBox.Comments.Page do
   @doc false
   def changeset(page, attrs) do
     page
-    |> cast(attrs, [:url, :status, :reputation, :hashed_url, :allowAnonymousComments, :allowAnonymousView])
-    |> validate_required([:url, :status, :hashed_url])
+    |> cast(attrs, [:url, :status, :reputation, :hashed_url, :allowAnonymousComments, :allowAnonymousView, :allowComments, :domain_id])
+    |> validate_required([:url, :status, :hashed_url, :domain_id])
   end
 end

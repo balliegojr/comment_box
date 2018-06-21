@@ -28,3 +28,12 @@ export function createDomain(domain_info) {
             }, reason => reject(errorMessage(reason)));
     });
 }
+
+export function updateDomain(domain_info) {
+    return new Promise((resolve, reject) => {
+        axios.put(`/api/domain/${domain_info.id}`, { domain: domain_info })
+            .then((domain) => {
+                resolve(domain.data);
+            }, reason => reject(errorMessage(reason)));
+    });
+}

@@ -50,6 +50,11 @@ export function handleChange(ev) {
     this.setState({ [name]: value });
 }
 
+export function handleCheckedChange(ev) {
+    const { name, checked } = ev.target;
+    this.setState({ [name]: checked });
+}
+
 export const defaultHandleChange = (binder) => {
     return handleChange.bind(binder);
 }

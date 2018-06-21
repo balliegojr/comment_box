@@ -14,7 +14,10 @@ defmodule CommentBoxWeb.DomainView do
     %{
       id: domain.id,
       address: domain.address,
-      app_key: domain.app_key
+      app_key: domain.app_key,
+      allowAnonymousComments: domain.allowAnonymousComments,
+      allowAnonymousView: domain.allowAnonymousView,
+      allowComments: domain.allowComments
     }
   end
 

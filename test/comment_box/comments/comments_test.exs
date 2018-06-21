@@ -3,17 +3,31 @@ defmodule CommentBox.CommentsTest do
 
   alias CommentBox.Comments
 
+  setup %{} do
+    %{ id: user_id} = CommentBoxWeb.AuthenticateHelper.get_default_user()
+    
+    %{ user_id: user_id}
+  end
+
+
   describe "pages" do
     alias CommentBox.Comments.Page
 
-    @valid_attrs %{reputation: 42, status: 42, url: "some url", hashed_url: "B19EACCD2D7354CFB67986AA657A28C9", allowAnonymousComments: true, allowAnonymousView: true}
+    @valid_attrs %{reputation: 42, status: 42, url: "some url", hashed_url: "B19EACCD2D7354CFB67986AA657A28C9", allowAnonymousComments: false, allowAnonymousView: true, allowComments: true }
     @update_attrs %{reputation: 43, status: 43, url: "some updated url", hashed_url: "FD6B2C3AD89E06714C7CDE79048FFC62"}
     @invalid_attrs %{reputation: nil, status: nil, url: nil}
 
     def page_fixture(attrs \\ %{}) do
-      {:ok, page} =
+      %{ id: user_id} = CommentBoxWeb.AuthenticateHelper.get_default_user()
+      
+      {:ok, %{id: domain_id}} =
+        %{ address: "teste", user_id: user_id}
+        |> Comments.create_domain()
+        
+        {:ok, page} =
         attrs
         |> Enum.into(@valid_attrs)
+        |> Enum.into(%{ domain_id: domain_id})
         |> Comments.create_page()
 
       page
@@ -29,19 +43,27 @@ defmodule CommentBox.CommentsTest do
       assert Comments.get_page!(page.id) == page
     end
 
-    test "get_page_by_url_or_create/1 returns the page with a given url or create a new one" do
-      page = Comments.get_page_by_url_or_create("a magnific url");
+    test "get_page_by_url_or_create/2 returns the page with a given url or create a new one", %{user_id: user_id} do
+      {:ok, domain} =
+      %{ address: "teste", user_id: user_id, allowAnonymousComments: false, allowAnonymousView: true, allowComments: true}
+        |> Comments.create_domain()
+
+      page = Comments.get_page_by_url_or_create("a magnific url", domain);
       assert page.url == "a magnific url"
       assert page.hashed_url  == Page.hash_url("a magnific url")
       assert page.allowAnonymousComments == false
       assert page.allowAnonymousView == true
 
-      assert page.id == Comments.get_page_by_url_or_create("a magnific url").id;
-      assert page.id != Comments.get_page_by_url_or_create("another magnific url").id;
+      assert page.id == Comments.get_page_by_url_or_create("a magnific url", domain).id;
+      assert page.id != Comments.get_page_by_url_or_create("another magnific url", domain).id;
     end
 
-    test "create_page/1 with valid data creates a page" do
-      assert {:ok, %Page{} = page} = Comments.create_page(@valid_attrs)
+    test "create_page/1 with valid data creates a page", %{user_id: user_id} do
+      {:ok, domain} =
+      %{ address: "teste", user_id: user_id, allowAnonymousComments: false, allowAnonymousView: true, allowComments: true}
+       |> Comments.create_domain()
+
+      assert {:ok, %Page{} = page} = Comments.create_page(Map.put(@valid_attrs, :domain_id, domain.id))
       assert page.reputation == 42
       assert page.status == 42
       assert page.url == "some url"
@@ -86,7 +108,13 @@ defmodule CommentBox.CommentsTest do
     @invalid_attrs %{content: nil, status: nil}
 
     def comment_fixture(attrs \\ %{}) do
-      page = Comments.get_page_by_url_or_create("default url")
+      %{ id: user_id} = CommentBoxWeb.AuthenticateHelper.get_default_user()
+      
+      {:ok, domain} =
+        %{ address: "teste", user_id: user_id}
+        |> Comments.create_domain()
+
+      page = Comments.get_page_by_url_or_create("default url", domain)
 
       {:ok, comment} =
         attrs
@@ -115,8 +143,12 @@ defmodule CommentBox.CommentsTest do
       assert id == comment.id
     end
 
-    test "create_comment/1 with valid data creates a comment" do
-      page = Comments.get_page_by_url_or_create("default url")
+    test "create_comment/1 with valid data creates a comment", %{user_id: user_id} do
+      {:ok, domain} =
+        %{ address: "teste", user_id: user_id}
+        |> Comments.create_domain()
+
+      page = Comments.get_page_by_url_or_create("default url", domain)
       valid_attr = Map.put(@valid_attrs, :page_id, page.id)   
       
       assert {:ok, %Comment{ id: comment_id }} = Comments.create_comment(valid_attr)
@@ -159,17 +191,11 @@ defmodule CommentBox.CommentsTest do
     end
   end
 
-  setup %{} do
-    %{ id: user_id} = CommentBoxWeb.AuthenticateHelper.get_default_user()
-    
-    %{ user_id: user_id}
-  end
-
   describe "domains" do
     alias CommentBox.Comments.Domain
 
-    @valid_attrs %{address: "some address"}
-    @update_attrs %{address: "some updated address", app_key: "some updated app_key"}
+    @valid_attrs %{address: "some address", allowAnonymousComments: false, allowAnonymousView: true, allowComments: true}
+    @update_attrs %{ allowAnonymousComments: true, allowAnonymousView: false, allowComments: false}
     @invalid_attrs %{address: nil, app_key: nil}
 
     def domain_fixture(attrs \\ %{}) do
@@ -216,14 +242,9 @@ defmodule CommentBox.CommentsTest do
 
     test "update_domain/2 with valid data updates the domain", %{ user_id: user_id } do
       domain = domain_fixture(%{ user_id: user_id })
-      assert {:ok, %{ address: "some updated address"}} = Comments.update_domain(domain, @update_attrs)
+      assert {:ok, %{  allowAnonymousComments: true, allowAnonymousView: false, allowComments: false }} = Comments.update_domain(domain, @update_attrs)
     end
 
-    test "update_domain/2 with invalid data returns error changeset", %{ user_id: user_id } do
-      domain = domain_fixture(%{ user_id: user_id })
-      assert {:error, %Ecto.Changeset{}} = Comments.update_domain(domain, @invalid_attrs)
-      assert domain == Comments.get_domain!(domain.id)
-    end
 
     test "delete_domain/1 deletes the domain", %{ user_id: user_id } do
       domain = domain_fixture(%{ user_id: user_id })

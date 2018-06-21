@@ -39,6 +39,7 @@ import AdminHome from './components/admin/home';
 import UserList from './components/users/userList';
 import UserEdit from './components/users/userEdit';
 import Account from './components/users/account';
+import DomainEdit from './components/domain/domainEdit';
 import DomainList from './components/domain/domainList';
 
 import { redux_logger } from './utility';
@@ -75,6 +76,7 @@ ReactDOM.render(
                             
                             <AuthenticatedRoute path="/account" component={Account} />
                             
+                            <AuthenticatedRoute roles={["Owner"]} path="/domains/:id" component={DomainEdit} />
                             <AuthenticatedRoute roles={["Owner"]} path="/domains" component={DomainList} />
                             <AuthenticatedRoute roles={["Owner"]} path="/pages" render={() => (<div>Pages page</div>)} />
                             <AuthenticatedRoute path="/comments" render={() => (<div>Comments page</div>)} />

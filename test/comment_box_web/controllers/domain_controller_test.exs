@@ -60,6 +60,22 @@ defmodule CommentBoxWeb.DomainControllerTest do
         end
     end
 
+    describe "update domain" do
+        setup [:authenticate, :create_domain]
+
+        test "updates chosen domain", %{conn: conn, domain: domain} do
+            conn = put conn, domain_path(conn, :update, domain.id), %{ domain: %{ allowComments: false, allowAnonymousComments: false, allowAnonymousView: false }}
+            assert %{
+                "id" => domain_id,
+                "allowAnonymousComments" => false,
+                "allowAnonymousView" => false,
+                "allowComments" => false
+            } = json_response(conn, 200)
+          
+            assert domain_id == domain.id
+        end
+    end
+
     defp create_domain(%{user: %{id: user_id}}) do
         domain = domain_fixture(%{user_id: user_id})
         {:ok, domain: domain}

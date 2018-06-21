@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loadDomains, deleteDomain } from '../../store/actions/domainActions';
 import NewDomainForm from './newDomainForm';
@@ -12,6 +13,7 @@ export const DomainRow = ({ domain, canDelete, handleDelete, handleCopy }) => {
             <td className="text-right"> 
                 <small> 
                     <a onClick={() => handleCopy(domain.app_key)} disabled="disabled"> Copy Key </a> 
+                    | <Link to={`/domains/${domain.id}`}> Edit </Link>
                     { canDelete ? ( <span> |  <a onClick={() => handleDelete(domain.id)}> Delete </a> </span>) : null }
                 </small>
             </td>

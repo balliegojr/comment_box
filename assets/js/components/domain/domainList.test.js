@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { configure, shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { DomainRow, DomainList, CopyKey } from './domainList';
@@ -23,6 +24,7 @@ describe('<DomainList />', () => {
 
         expect(wrapper.find('tbody').children()).toHaveLength(2);
         expect(wrapper.find('tbody').children().first().dive().find('small')).toHaveLength(1);
+        expect(wrapper.find('tbody').children().first().dive().find(Link)).toHaveLength(1);
     });
 
     it('should render delete button if there is more than 1 domain', () => {

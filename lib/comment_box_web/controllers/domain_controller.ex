@@ -35,4 +35,12 @@ defmodule CommentBoxWeb.DomainController do
       send_resp(conn, :no_content, "")
     end
   end
+
+   def update(conn, %{"id" => id, "domain" => domain_params}) do
+    domain = Comments.get_domain!(id)
+
+    with {:ok, %Domain{} = domain} <- Comments.update_domain(domain, domain_params) do
+      render(conn, "show.json", domain: domain)
+    end
+  end
 end

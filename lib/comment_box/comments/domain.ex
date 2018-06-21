@@ -8,16 +8,25 @@ defmodule CommentBox.Comments.Domain do
     field :address, :string
     field :app_key, :string
     field :user_id, :id
-
+    
+    field :allowComments, :boolean
+    field :allowAnonymousComments, :boolean
+    field :allowAnonymousView, :boolean
+        
     timestamps()
   end
 
   @doc false
   def changeset(domain, attrs) do
     domain
-    |> cast(attrs, [:address, :user_id])
+    |> cast(attrs, [:address, :user_id, :allowAnonymousComments, :allowAnonymousView, :allowComments])
     |> put_app_key()
     |> validate_required([:address, :app_key, :user_id])
+  end
+
+  def update_changeset(domain, attrs) do
+    domain
+    |> cast(attrs, [:allowAnonymousComments, :allowAnonymousView, :allowComments])
   end
 
   def put_app_key(%Ecto.Changeset{} = changeset) do

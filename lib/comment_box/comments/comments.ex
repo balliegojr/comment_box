@@ -7,7 +7,6 @@ defmodule CommentBox.Comments do
   alias CommentBox.Repo
 
   alias CommentBox.Comments.Page
-  alias CommentBox.Accounts.User
 
   @doc """
   Returns the list of pages.
@@ -38,11 +37,31 @@ defmodule CommentBox.Comments do
   """
   def get_page!(id), do: Repo.get!(Page, id)
 
-  def get_page_by_url_or_create(url) do
+  @doc """
+  Get an existent page or create a new one based on the given url
+
+  Raises `Ecto.NoResultsError` if the Page does not exist.
+
+  ## Examples
+
+      iex> get_page_by_url_or_create("some url", %Domain{})
+      %Page{}
+
+  """
+  def get_page_by_url_or_create(url, domain) do
     hash_url = Page.hash_url(url)
     case Repo.get_by(Page, hashed_url: hash_url) do
         nil -> 
-            case create_page(%{ :hashed_url => hash_url, :url => url, :status => 0, :reputation => 0, :allowAnonymousComments => false, :allowAnonymousView => true}) do
+            case create_page(%{ 
+                :hashed_url => hash_url,
+                :url => url,
+                :status => 0,
+                :reputation => 0,
+                :allowAnonymousComments => domain.allowAnonymousComments,
+                :allowAnonymousView => domain.allowAnonymousView,
+                :allowComments => domain.allowComments,
+                :domain_id => domain.id
+                }) do
                 {:ok, page} -> page
             end
         page -> page
@@ -330,7 +349,7 @@ defmodule CommentBox.Comments do
   """
   def update_domain(%Domain{} = domain, attrs) do
     domain
-    |> Domain.changeset(attrs)
+    |> Domain.update_changeset(attrs)
     |> Repo.update()
   end
 

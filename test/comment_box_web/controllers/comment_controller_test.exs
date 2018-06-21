@@ -8,15 +8,19 @@ defmodule CommentBoxWeb.CommentControllerTest do
   @update_attrs %{content: "some updated content", status: 43}
   @invalid_attrs %{content: nil, status: nil}
 
-  def fixture(:page, url) do
-      Comments.get_page_by_url_or_create(url)
+  def fixture(:domain, user_id) do
+    {:ok, domain} = Comments.create_domain(%{ address: "some domain", user_id: user_id})
+    domain
   end
-
-  def fixture(:comment) do
-
-    {:ok, comment} = Comments.create_comment(Map.put(@create_attrs, :page_id, fixture(:page, "www.example.com").id ))
+  def fixture(:comment, page_id) do
+    {:ok, comment} = Comments.create_comment(Map.put(@create_attrs, :page_id, page_id))
     comment
   end
+
+  def fixture(:page, url, domain) do
+    Comments.get_page_by_url_or_create(url, domain)
+  end
+
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -34,8 +38,11 @@ defmodule CommentBoxWeb.CommentControllerTest do
   describe "create comment" do
     setup [:authenticate]
     
-    test "renders comment when data is valid", %{conn: conn} do
-      conn = post conn, comment_path(conn, :create), comment: Map.put(@create_attrs, "page_id", fixture(:page, "www.example.com").id )
+    test "renders comment when data is valid", %{conn: conn, user: %{id: user_id}} do
+      domain = fixture(:domain, user_id)
+      %{id: page_id} = fixture(:page, "www.example.com", domain)
+      conn = post conn, comment_path(conn, :create), comment: Map.put(@create_attrs, "page_id", page_id)
+      
       assert %{"id" => id} = json_response(conn, 201)
 
       {:ok, [conn: conn, user: _]} = authenticate(%{conn: build_conn()}) 
@@ -95,15 +102,20 @@ defmodule CommentBoxWeb.CommentControllerTest do
   describe "get_page_comments" do
     setup [:authenticate]
 
-    test "lists all comments of a given page", %{conn: conn} do
-      page_id = fixture(:page, "www.example.com").id
+    test "lists all comments of a given page", %{conn: conn, user: %{id: user_id}} do
+      domain = fixture(:domain, user_id)
+      %{id: page_id} = fixture(:page, "www.example.com", domain)
+      
       conn = get conn, comment_path(conn, :get_page_comments, page_id)
       assert json_response(conn, 200) == []
     end
   end
 
-  defp create_comment(_) do
-    comment = fixture(:comment)
+  defp create_comment(%{user: %{id: user_id}}) do
+    
+    domain = fixture(:domain, user_id)
+    page_id = fixture(:page, "www.example.com", domain).id
+    comment = fixture(:comment, page_id)
     {:ok, comment: comment}
   end
 end
