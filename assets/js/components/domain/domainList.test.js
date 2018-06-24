@@ -12,7 +12,7 @@ describe('<DomainList />', () => {
     let doLoadDomains;
     beforeEach(() => {
         doLoadDomains = jest.fn();
-        wrapper = shallow(<DomainList domains={[]} doLoadDomains={doLoadDomains} />)
+        wrapper = shallow(<DomainList domains={{ loadedDomains: [{ id: 0}]}} doLoadDomains={doLoadDomains} />)
     });
 
     it('should call doLoadDomains', () => {
@@ -20,26 +20,37 @@ describe('<DomainList />', () => {
     });
 
     it('should render <DomainRow /> for each domain', () => {
-        wrapper.setProps({ domains: [{ id: 1}, {id:2}]});
+        const domain = {
+            id: 1,
+            address: 'some address',
+            app_key: 'some key'
+        }
+        wrapper.setProps({ domains:  { loadedDomains: [domain, {id:2}]}});
 
         expect(wrapper.find('tbody').children()).toHaveLength(2);
-        expect(wrapper.find('tbody').children().first().dive().find('small')).toHaveLength(1);
-        expect(wrapper.find('tbody').children().first().dive().find(Link)).toHaveLength(1);
+        const row = wrapper.find('tbody').children().first().dive();
+        
+        expect(row.find('td').at(0).text()).toEqual(' some address ');
+        expect(row.find('td').at(1).text()).toEqual(' some key ');
+        
+        expect(row.find('small')).toHaveLength(1);
+        expect(row.find('a').first().text()).toEqual(' Copy Key ');
+        expect(row.contains(<Link to='/domains/1'> Edit </Link>)).toBeTruthy();
     });
 
     it('should render delete button if there is more than 1 domain', () => {
-        wrapper.setProps({ domains: [{ id: 1 }] });
+        wrapper.setProps({ domains: { loadedDomains: [{ id: 1 }] }});
 
         expect(wrapper.find('tbody').children()).toHaveLength(1);
         expect(wrapper.find('tbody').children().first().dive().find('small span a')).toHaveLength(0);
         
-        wrapper.setProps({ domains: [{ id: 1 }, { id: 2 }] });
+        wrapper.setProps({ domains: { loadedDomains: [{ id: 1 }, { id: 2 }] }});
         expect(wrapper.find('tbody').children().first().dive().find('small span a')).toHaveLength(1);
     });
 
     it('should handle delete click', ()=> {
         const doDeleteDomain = jest.fn();
-        wrapper.setProps({ domains: [{ id: 1 }, { id: 2 }], doDeleteDomain });
+        wrapper.setProps({ domains: { loadedDomains: [{ id: 1 }, { id: 2 }]}, doDeleteDomain });
 
         wrapper.find('tbody').children().first().dive().find('small span a').simulate('click');
         expect(doDeleteDomain).toHaveBeenCalledWith(1);
@@ -48,7 +59,7 @@ describe('<DomainList />', () => {
 
     it('should handle copy key click', () => {
         const info = jest.fn();
-        wrapper.setProps({ domains: [{ id: 1, app_key: "key" }], notifiable: { info }});
+        wrapper.setProps({ domains: { loadedDomains: [{ id: 1, app_key: "key" }]}, notifiable: { info }});
 
         wrapper.find('tbody').children().first().dive().find('small a').simulate('click');
         expect(info).toHaveBeenCalledWith(<CopyKey appKey="key" />);

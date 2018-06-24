@@ -22,6 +22,31 @@ defmodule CommentBoxWeb.PageSettingsControllerTest do
     end
   end
 
+  describe "get all pages of the current user" do
+    setup [:authenticate]
+
+    test "GET /api/pages", %{conn: conn} do
+      conn = get conn, page_settings_path(conn, :index)
+      assert json_response(conn, 200) == []
+    end
+  end
+
+  describe "update page" do
+    setup [:authenticate, :create_page]
+
+    test "PUT /api/pages/:id", %{conn: conn, page: page} do
+      conn = put conn, page_settings_path(conn, :update, page.id), %{ page: %{ allowComments: false, allowAnonymousComments: false, allowAnonymousView: false }}
+      
+      assert %{
+          "id" => page_id,
+          "allowAnonymousComments" => false,
+          "allowAnonymousView" => false,
+          "allowComments" => false
+      } = json_response(conn, 200)
+    
+      assert page_id == page.id
+    end
+  end
 
   def domain_fixture(attrs \\ %{}) do
     {:ok, domain} =
@@ -39,5 +64,11 @@ defmodule CommentBoxWeb.PageSettingsControllerTest do
     {:ok, domain: domain}
   end
 
+  defp create_page(_) do
+    {:ok, domain: domain} = create_domain(nil)
+    
+    page = Comments.get_page_by_url_or_create("/someurl", domain)
+    {:ok, page: page}
+  end
  
 end

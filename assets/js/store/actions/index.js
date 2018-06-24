@@ -4,6 +4,7 @@ import * as pageSettingsActions from "./pageSettingsActions";
 import * as accountActions from "./accountActions";
 import * as usersActions from "./usersActions";
 import * as domainActions from "./domainActions";
+import * as pagesActions from "./pagesActions";
 
 export {
     actionTypes,
@@ -11,5 +12,6 @@ export {
     pageSettingsActions,
     accountActions,
     usersActions,
-    domainActions
+    domainActions,
+    pagesActions
 }

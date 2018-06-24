@@ -14,7 +14,7 @@ defmodule CommentBox.CommentsTest do
     alias CommentBox.Comments.Page
 
     @valid_attrs %{reputation: 42, status: 42, url: "some url", hashed_url: "B19EACCD2D7354CFB67986AA657A28C9", allowAnonymousComments: false, allowAnonymousView: true, allowComments: true }
-    @update_attrs %{reputation: 43, status: 43, url: "some updated url", hashed_url: "FD6B2C3AD89E06714C7CDE79048FFC62"}
+    @update_attrs %{url: "some updated url", allowAnonymousComments: true, allowAnonymousView: false, allowComments: false}
     @invalid_attrs %{reputation: nil, status: nil, url: nil}
 
     def page_fixture(attrs \\ %{}) do
@@ -34,12 +34,17 @@ defmodule CommentBox.CommentsTest do
     end
 
     test "list_pages/0 returns all pages" do
+      %{ id: user_id} = CommentBoxWeb.AuthenticateHelper.get_default_user()
       page = page_fixture()
-      assert Comments.list_pages() == [page]
+        |> CommentBox.Repo.preload(:domain)
+
+      assert Comments.list_pages(user_id) == [page]
     end
 
     test "get_page!/1 returns the page with given id" do
       page = page_fixture()
+        |> CommentBox.Repo.preload(:domain)
+        
       assert Comments.get_page!(page.id) == page
     end
 
@@ -77,15 +82,10 @@ defmodule CommentBox.CommentsTest do
       page = page_fixture()
       assert {:ok, page} = Comments.update_page(page, @update_attrs)
       assert %Page{} = page
-      assert page.reputation == 43
-      assert page.status == 43
-      assert page.url == "some updated url"
-    end
-
-    test "update_page/2 with invalid data returns error changeset" do
-      page = page_fixture()
-      assert {:error, %Ecto.Changeset{}} = Comments.update_page(page, @invalid_attrs)
-      assert page == Comments.get_page!(page.id)
+      assert page.url == "some url"
+      assert page.allowComments == false
+      assert page.allowAnonymousComments == true
+      assert page.allowAnonymousView == false
     end
 
     test "delete_page/1 deletes the page" do

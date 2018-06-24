@@ -36,12 +36,25 @@ export class PageDisplay extends Component {
         this.channel = socketService.channel(`page:${page_id}`);
         this.channel.on("comment_new", payload => this.props.onAddNewComment(payload));
         this.channel.on("comment_updated", payload => this.props.onUpdateComment(payload));
+        this.channel.on("page_updated", payload => this.props.onUpdatePage(payload));
     }
 
     render() {
         if (this.props.settings.hasError) {
             return (
                 <div className="alert alert-danger text-center"><span>Something is wrong, please contact the administrator</span></div>
+            )
+        }
+
+        if (this.props.settings.isLoading) {
+            return (
+                <div className="alert alert-info text-center"><span className="text-center"> loading ... </span> </div>
+            )
+        }
+
+        if (!this.props.settings.allowComments) {
+            return (
+                <div className="text-center alert alert-danger">Comments are not enabled for this page</div> 
             )
         }
 
@@ -60,13 +73,8 @@ export class PageDisplay extends Component {
                     : <TopContent />
                 }
 
-                { this.props.settings.isLoading 
-                    ? <div className="alert alert-info text-center"><span className="text-center"> loading ... </span> </div>
-                    : <div>
-                           {commentBoxSection}
-                           {commentsSection}
-                      </div>
-                }
+                {commentBoxSection}
+                {commentsSection}
             </div>
         )
     }
@@ -84,6 +92,7 @@ const mapDispatchToProps = dispatch => {
         onLoadPageSettings: () => dispatch(pageActions.loadPageSettings()),
         onAddNewComment: (comment) => dispatch(commentActions.appendComment(comment)),
         onUpdateComment: (comment) => dispatch(commentActions.updateComment(comment)),
+        onUpdatePage: (page) => dispatch(pageActions.setPageSettings(page))
     }
 };
 

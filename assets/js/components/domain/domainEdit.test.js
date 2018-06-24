@@ -34,7 +34,7 @@ describe('<DomainEdit />', () => {
     });
 
     it('should render a loading message when no domain is loaded', () => {
-        expect(wrapper.find('div').text()).toEqual('Loading');
+        expect(wrapper.find('.alert').text()).toEqual('Loading');
         expect(wrapper.find('form')).toHaveLength(0);
 
         wrapper.setProps({ domain: {}});

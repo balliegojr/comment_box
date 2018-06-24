@@ -30,7 +30,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom"
 import * as socketService from "./services/socketService";
 
 
-import { authReducer, usersReducer, domainReducer } from './store/reducers/'
+import { authReducer, usersReducer, domainReducer, pagesReducer } from './store/reducers/'
 import { accountActions } from './store/actions';
 import * as accountService from './services/accountService';
 
@@ -41,6 +41,8 @@ import UserEdit from './components/users/userEdit';
 import Account from './components/users/account';
 import DomainEdit from './components/domain/domainEdit';
 import DomainList from './components/domain/domainList';
+import PageEdit from './components/page/pageEdit';
+import PageList from './components/page/pageList';
 
 import { redux_logger } from './utility';
 import { Authenticated, Anonymous, Role, AuthenticatedRoute } from './components/authorization';
@@ -52,7 +54,8 @@ socketService.connect();
 const rootReducer = combineReducers({
     user: authReducer,
     users: usersReducer,
-    domains: domainReducer
+    domains: domainReducer,
+    pages: pagesReducer
 });
 
 
@@ -78,7 +81,10 @@ ReactDOM.render(
                             
                             <AuthenticatedRoute roles={["Owner"]} path="/domains/:id" component={DomainEdit} />
                             <AuthenticatedRoute roles={["Owner"]} path="/domains" component={DomainList} />
-                            <AuthenticatedRoute roles={["Owner"]} path="/pages" render={() => (<div>Pages page</div>)} />
+                            
+                            <AuthenticatedRoute roles={["Owner"]} path="/pages/:id" component={PageEdit} />
+                            <AuthenticatedRoute roles={["Owner"]} path="/pages" component={PageList} />
+
                             <AuthenticatedRoute path="/comments" render={() => (<div>Comments page</div>)} />
                             <AuthenticatedRoute path="/" exact component={AdminHome} />
                         </Switch>

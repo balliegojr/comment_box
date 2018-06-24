@@ -18,9 +18,9 @@ const UserRow = (props) => {
                     : "Disabled"
                 }
             </td>
-            <td>
-                <Link className="btn btn-link btn-sm pull-right" to={`/users/${props.user.id}`}>
-                    Edit
+            <td className="text-right">
+                <Link to={`/users/${props.user.id}`}>
+                    edit
                 </Link>
             </td>
         </tr>

@@ -27,4 +27,9 @@ defmodule CommentBox.Comments.Page do
     |> cast(attrs, [:url, :status, :reputation, :hashed_url, :allowAnonymousComments, :allowAnonymousView, :allowComments, :domain_id])
     |> validate_required([:url, :status, :hashed_url, :domain_id])
   end
+
+  def update_changeset(page, attrs) do
+    page
+    |> cast(attrs, [:allowAnonymousComments, :allowAnonymousView, :allowComments])
+  end
 end

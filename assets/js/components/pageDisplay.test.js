@@ -15,7 +15,7 @@ describe('<PageDisplay />', () => {
     let wrapper;
     let onLoadPageSettings = jest.fn();
     beforeEach(() => {
-        wrapper = shallow(<PageDisplay settings={{}} user={{}} onLoadPageSettings={onLoadPageSettings} />);
+        wrapper = shallow(<PageDisplay settings={{ allowComments: true}} user={{}} onLoadPageSettings={onLoadPageSettings} />);
     });
 
     it('should load page settings', () => {
@@ -27,9 +27,15 @@ describe('<PageDisplay />', () => {
         expect(wrapper.find('.alert.alert-danger').text()).toEqual("Something is wrong, please contact the administrator");
     });
 
-    it('should show an loading message', () => {
+    it('should show a loading message', () => {
         wrapper.setProps({ settings: { isLoading: true }});
         expect(wrapper.find('.alert.alert-info').text()).toEqual(' loading ...  ');
+    });
+
+
+    it('should show an error message when comments are blocked', () => {
+        wrapper.setProps({ settings: { allowComments: false } });
+        expect(wrapper.find('.alert.alert-danger').text()).toEqual('Comments are not enabled for this page');
     });
 
     it('should render <AuthenticationForms /> when user is not authenticated', () => {
@@ -52,7 +58,7 @@ describe('<PageDisplay />', () => {
         wrapper.setProps({ user: { } })
         expect(wrapper.find(CommentBox)).toHaveLength(0);
 
-        wrapper.setProps({ settings: { allowAnonymousComment: true} });
+        wrapper.setProps({ settings: { allowComments: true, allowAnonymousComment: true} });
         expect(wrapper.find(CommentBox)).toHaveLength(1);
     });
 
@@ -65,7 +71,7 @@ describe('<PageDisplay />', () => {
         wrapper.setProps({ user: {} })
         expect(wrapper.find(CommentList)).toHaveLength(0);
 
-        wrapper.setProps({ settings: { allowAnonymousView: true } });
+        wrapper.setProps({ settings: { allowComments: true, allowAnonymousView: true } });
         expect(wrapper.find(CommentList)).toHaveLength(1);
     });
 });

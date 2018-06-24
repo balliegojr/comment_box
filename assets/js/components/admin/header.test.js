@@ -43,10 +43,12 @@ describe('<AdminHeader />', () => {
         expect(adminSection.children()).toHaveLength(1);
         expect(adminSection.contains(<NavLink to="/users" activeClassName="active"> Users </NavLink>)).toBeTruthy();
        
-        expect(ownerSection.children()).toHaveLength(1);
+        expect(ownerSection.children()).toHaveLength(2);
         expect(ownerSection.contains(<NavLink to="/domains" activeClassName="active"> Domains </NavLink>)).toBeTruthy();
+        expect(ownerSection.contains(<NavLink to="/pages" activeClassName="active"> Pages </NavLink>)).toBeTruthy();
         
-        expect(moderatorSection.children()).toHaveLength(1);
+        expect(moderatorSection.children()).toHaveLength(2);
         expect(moderatorSection.contains(<NavLink to="/domains" activeClassName="active"> Domains </NavLink>)).toBeTruthy();
+        expect(moderatorSection.contains(<NavLink to="/pages" activeClassName="active"> Pages </NavLink>)).toBeTruthy();
     });
  });

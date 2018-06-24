@@ -35,6 +35,6 @@ describe('<UserList />', () => {
         expect(wrapper.find('tbody').children()).toHaveLength(2);
         const firstRow = wrapper.find('tbody').children().first().dive();
 
-        expect(firstRow.contains(<Link className="btn btn-link btn-sm pull-right" to={'/users/1'}>Edit</Link>)).toBeTruthy();
+        expect(firstRow.contains(<Link to={'/users/1'}>edit</Link>)).toBeTruthy();
     });
 });

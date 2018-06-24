@@ -58,6 +58,7 @@ defmodule CommentBoxWeb.Router do
     put "/user/plan", UserController, :set_plan
     resources "/user", UserController, except: [:new, :edit]
     resources "/domain", DomainController, only: [:create, :index, :delete, :update]
+    resources "/pages", PageSettingsController, only: [:index, :update]
   end
   
   scope "/api", CommentBoxWeb do

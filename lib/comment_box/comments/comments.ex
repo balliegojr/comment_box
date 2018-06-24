@@ -7,18 +7,24 @@ defmodule CommentBox.Comments do
   alias CommentBox.Repo
 
   alias CommentBox.Comments.Page
+  alias CommentBox.Comments.Domain
 
   @doc """
-  Returns the list of pages.
+  Returns the list of pages of a given user.
 
   ## Examples
 
-      iex> list_pages()
+      iex> list_pages(user_id)
       [%Page{}, ...]
 
   """
-  def list_pages do
-    Repo.all(Page)
+  def list_pages(user_id) do
+    page_query = from p in Page, 
+        join: d in assoc(p, :domain),
+        where: d.user_id == ^user_id,
+        preload: [domain: d]
+   
+    Repo.all(page_query)
   end
 
   @doc """
@@ -35,7 +41,7 @@ defmodule CommentBox.Comments do
       ** (Ecto.NoResultsError)
 
   """
-  def get_page!(id), do: Repo.get!(Page, id)
+  def get_page!(id), do: Repo.get!(Page, id) |> Repo.preload(:domain)
 
   @doc """
   Get an existent page or create a new one based on the given url
@@ -100,7 +106,7 @@ defmodule CommentBox.Comments do
   """
   def update_page(%Page{} = page, attrs) do
     page
-    |> Page.changeset(attrs)
+    |> Page.update_changeset(attrs)
     |> Repo.update()
   end
 
@@ -245,8 +251,6 @@ defmodule CommentBox.Comments do
   def change_comment(%Comment{} = comment) do
     Comment.changeset(comment, %{})
   end
-
-  alias CommentBox.Comments.Domain
 
   @doc """
   Returns the list of user domains.

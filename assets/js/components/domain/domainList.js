@@ -12,7 +12,7 @@ export const DomainRow = ({ domain, canDelete, handleDelete, handleCopy }) => {
             <td className="key"> {domain.app_key} </td>
             <td className="text-right"> 
                 <small> 
-                    <a onClick={() => handleCopy(domain.app_key)} disabled="disabled"> Copy Key </a> 
+                    <a onClick={() => handleCopy(domain.app_key)}> Copy Key </a> 
                     | <Link to={`/domains/${domain.id}`}> Edit </Link>
                     { canDelete ? ( <span> |  <a onClick={() => handleDelete(domain.id)}> Delete </a> </span>) : null }
                 </small>
@@ -72,8 +72,33 @@ export class DomainList extends Component {
 
 
     render() {
-        const canDelete = this.props.domains.length > 1;
-        const domains = this.props.domains.map(domain => (
+        if (this.props.domains.isLoading) {
+            return (
+                <div className="row">
+                    <div className="col-sm-12">
+                        <div className="alert alert-info text-center">
+                            Loading
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
+        if (!this.props.domains.loadedDomains.length) {
+            return (
+                <div className="row">
+                    <div className="col-sm-12">
+                        <div className="alert alert-info text-center">
+                            There are no domains to show
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+
+
+        const canDelete = this.props.domains.loadedDomains.length > 1;
+        const domains = this.props.domains.loadedDomains.map(domain => (
             <DomainRow 
                 key={domain.id}
                 domain={domain}
@@ -113,7 +138,7 @@ export class DomainList extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        domains: state.domains.loadedDomains
+        domains: state.domains
     }
 }
 
