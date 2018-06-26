@@ -23,6 +23,7 @@ defmodule CommentBoxWeb.DomainController do
 
   def create(conn, %{"domain" => domain_params}) do
     with {:ok, %Domain{} = domain} <- Comments.create_domain(Map.put(domain_params, "user_id", user_id(conn))) do
+      domain = Comments.get_domain!(domain.id) #reload domain to get default values
       conn
         |> put_status(:created)
         |> render("show.json", domain: domain)

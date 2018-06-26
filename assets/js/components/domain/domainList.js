@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loadDomains, deleteDomain } from '../../store/actions/domainActions';
+import { loadDomains, deleteDomain, setDomainPage } from '../../store/actions/domainActions';
 import NewDomainForm from './newDomainForm';
 import notifiable from '../../hoc/notifiable';
+import Switcher from '../pagination/switcher';
 
 export const DomainRow = ({ domain, canDelete, handleDelete, handleCopy }) => {
     return (
@@ -72,7 +73,7 @@ export class DomainList extends Component {
 
 
     render() {
-        if (this.props.domains.isLoading) {
+        if (this.props.domains.fetching) {
             return (
                 <div className="row">
                     <div className="col-sm-12">
@@ -84,7 +85,7 @@ export class DomainList extends Component {
             )
         }
 
-        if (!this.props.domains.loadedDomains.length) {
+        if (!this.props.domains.pagination.current.length) {
             return (
                 <div className="row">
                     <div className="col-sm-12">
@@ -97,8 +98,8 @@ export class DomainList extends Component {
         }
 
 
-        const canDelete = this.props.domains.loadedDomains.length > 1;
-        const domains = this.props.domains.loadedDomains.map(domain => (
+        const canDelete = this.props.domains.pagination.all.length > 1;
+        const domains = this.props.domains.pagination.current.map(domain => (
             <DomainRow 
                 key={domain.id}
                 domain={domain}
@@ -131,6 +132,8 @@ export class DomainList extends Component {
                     </tbody>
                 </table>
 
+                <Switcher pagination={this.props.domains.pagination} setPage={this.props.setPage} />
+
             </div>
         )
     }
@@ -145,7 +148,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         doLoadDomains: () => dispatch(loadDomains()),
-        doDeleteDomain: (domain_id) => dispatch(deleteDomain(domain_id))
+        doDeleteDomain: (domain_id) => dispatch(deleteDomain(domain_id)),
+        setPage: (page) => dispatch(setDomainPage(page))
     }
 }
 

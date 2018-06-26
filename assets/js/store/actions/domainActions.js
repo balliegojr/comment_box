@@ -4,7 +4,7 @@ import { cloneObject } from '../../utility';
 
 const setLoadingDomains = (isLoading) => {
     return { 
-        type: actionTypes.SET_DOMAINS_LOADING,
+        type: actionTypes.FETCHING_DOMAINS,
         payload: isLoading
     }
 }
@@ -23,7 +23,11 @@ const appendDomain = (domain) => {
     }
 }
 
-export const loadDomains = () => (dispatch) => {
+export const loadDomains = () => (dispatch, getStore) => {
+    if (getStore().domains.loaded) {
+        return Promise.resolve();
+    }
+    
     dispatch(setLoadingDomains(true));
 
     return domainService.getDomains()
@@ -61,13 +65,19 @@ export const editDomain = (domain_id) => (dispatch, getStore) => {
         return;
     }
 
-    const filtered_domains = getStore().domains.loadedDomains.filter((domain) => domain.id === domain_id);
+    const { fetching, loaded } = getStore().domains;
+
+    if (!loaded && !fetching ) {
+        dispatch(loadDomains())
+            .then(() => dispatch(editDomain(domain_id)));
+    }
+
+    const filtered_domains = getStore().domains.pagination.all.filter((domain) => domain.id === domain_id);
     if (!!filtered_domains.length) {
         const domain = cloneObject(filtered_domains[0]);
         dispatch(setEditingDomain(domain));
     } else {
-        dispatch(loadDomains())
-            .then(() => dispatch(editDomain(domain_id)));
+        //redirect to 404
     }
 }
 
@@ -82,4 +92,11 @@ const updateDomainAction = (domain) => {
 export const updateDomain = (domain_info) => (dispatch) => {
     return domainService.updateDomain(domain_info)
         .then((domain) => dispatch(updateDomainAction(domain)));
+}
+
+export const setDomainPage = (page) => {
+    return {
+        type: actionTypes.SET_DOMAIN_PAGE,
+        payload: page
+    }
 }
