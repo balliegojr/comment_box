@@ -65,14 +65,14 @@ export const editDomain = (domain_id) => (dispatch, getStore) => {
         return;
     }
 
-    const { fetching, loaded } = getStore().domains;
+    const { fetching, loaded, pagination } = getStore().domains;
 
     if (!loaded && !fetching ) {
         dispatch(loadDomains())
             .then(() => dispatch(editDomain(domain_id)));
     }
 
-    const filtered_domains = getStore().domains.pagination.all.filter((domain) => domain.id === domain_id);
+    const filtered_domains = pagination.all.filter((domain) => domain.id === domain_id);
     if (!!filtered_domains.length) {
         const domain = cloneObject(filtered_domains[0]);
         dispatch(setEditingDomain(domain));

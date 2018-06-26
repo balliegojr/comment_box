@@ -3,7 +3,7 @@ import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { pagesActions } from '../../store/actions';
-
+import Switcher from '../pagination/switcher';
 
 const PageRow = ({ page: page}) => {
     return (
@@ -28,7 +28,7 @@ export class PageList extends Component {
         this.props.doLoadPages();
     }
     render() {
-        if (this.props.pages.isLoading) {
+        if (this.props.pages.fetching) {
             return (
                 <div className="row">
                     <div className="col-sm-12">
@@ -40,7 +40,7 @@ export class PageList extends Component {
             )
         }
 
-        if (!this.props.pages.loadedPages.length) {
+        if (!this.props.pages.pagination.all.length) {
             return (
                 <div className="row">
                     <div className="col-sm-12">
@@ -52,7 +52,7 @@ export class PageList extends Component {
             )
         }
 
-        const pages = this.props.pages.loadedPages.map(page => <PageRow key={page.id} page={page} />);
+        const pages = this.props.pages.pagination.current.map(page => <PageRow key={page.id} page={page} />);
 
         return (
             <div className="page-list">
@@ -80,6 +80,8 @@ export class PageList extends Component {
                         {pages}
                     </tbody>
                 </table>
+
+                <Switcher pagination={this.props.pages.pagination} setPage={this.props.setPage} />
             </div>
         )
     }
@@ -93,7 +95,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        doLoadPages: () => dispatch(pagesActions.loadPages())
+        doLoadPages: () => dispatch(pagesActions.loadPages()),
+        setPage: (page) => dispatch(pagesActions.setCurrentPage(page))
     }
 }
 

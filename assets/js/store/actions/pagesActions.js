@@ -4,7 +4,7 @@ import { cloneObject } from '../../utility';
 
 const setLoadingPages = (isLoading) => {
     return {
-        type: actionTypes.SET_PAGES_LOADING,
+        type: actionTypes.FETCHING_PAGES,
         payload: isLoading
     }
 }
@@ -16,7 +16,11 @@ const setPages = (pages) => {
     }
 }
 
-export const loadPages = () => (dispatch) => {
+export const loadPages = () => (dispatch, getStore) => {
+    if (getStore().pages.loaded) {
+        return Promise.resolve();
+    }
+    
     dispatch(setLoadingPages(true));
 
     return pagesService.getPages()
@@ -37,13 +41,18 @@ export const editPage = (page_id) => (dispatch, getStore) => {
         return;
     }
 
-    const filtered_pages = getStore().pages.loadedPages.filter((page) => page.id === page_id);
+    const { fetching, loaded, pagination } = getStore().pages;
+    if (!loaded && !fetching) {
+        dispatch(loadPages())
+            .then(() => dispatch(editPage(page_id)));
+    }
+
+    const filtered_pages = pagination.all.filter((page) => page.id === page_id);
     if (!!filtered_pages.length) {
         const page = cloneObject(filtered_pages[0]);
         dispatch(setEditingPage(page));
     } else {
-        dispatch(loadPages())
-            .then(() => dispatch(editPage(page_id)));
+       // redirect to 404
     }
 }
 
@@ -58,4 +67,11 @@ const updatePageAction = (page) => {
 export const updatePage = (page_info) => (dispatch) => {
     return pagesService.updatePage(page_info)
         .then((page) => dispatch(updatePageAction(page)));
+}
+
+export const setCurrentPage = (page) => {
+    return {
+        type: actionTypes.SET_PAGE_PAGINATION,
+        payload: page
+    }
 }

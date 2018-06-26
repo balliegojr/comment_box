@@ -4,6 +4,10 @@ import Adapter from 'enzyme-adapter-react-16';
 import { PageList } from './pageList';
 import { Link } from 'react-router-dom';
 
+
+import * as pagination from '../../store/reducers/paginationReducer';
+import Switcher from '../pagination/switcher';
+
 configure({adapter: new Adapter()});
 
 
@@ -12,7 +16,8 @@ describe('<PageList />', () => {
     let doLoadPages;
     beforeEach(() => {
         doLoadPages = jest.fn();
-        wrapper = shallow(<PageList pages={{ loadedPages: [{ id: 0 }] }} doLoadPages={doLoadPages} />)
+        
+        wrapper = shallow(<PageList pages={{ pagination: pagination.set_content(pagination.build_state(10), [{ id: 0 }]) }} doLoadPages={doLoadPages} />)
     });
 
     it('should call doLoadPages', () => {
@@ -29,7 +34,7 @@ describe('<PageList />', () => {
             allowAnonymousView: true,
             inserted_at: new Date()
         }
-        wrapper.setProps({ pages: { loadedPages: [page, { id: 2 }] } });
+        wrapper.setProps({ pages: { pagination: pagination.set_content(pagination.build_state(10), [page, { id: 2 }]) } });
 
         expect(wrapper.find('tbody').children()).toHaveLength(2);
         const row = wrapper.find('tbody').children().first().dive();
@@ -42,12 +47,16 @@ describe('<PageList />', () => {
     });
 
     it('should render loading message', () => {
-        wrapper.setProps({ pages: { isLoading: true }});
+        wrapper.setProps({ pages: { fetching: true }});
         expect(wrapper.contains(<div className="alert alert-info text-center">Loading</div>)).toBeTruthy();
     });
 
     it('should render "no pages" message', () => {
-        wrapper.setProps({ pages: { loadedPages: [] } });
+        wrapper.setProps({ pages: { pagination: { all: [] } }});
         expect(wrapper.contains(<div className="alert alert-info text-center">There are no pages to show</div>)).toBeTruthy();
+    });
+
+    it('should render a <Switcher />', () => {
+        expect(wrapper.find(Switcher)).toHaveLength(1);
     });
 });
