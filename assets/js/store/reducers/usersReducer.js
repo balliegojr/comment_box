@@ -1,19 +1,23 @@
-import * as actionTypes from '../actions/actionTypes'
+import { actionTypes } from '../actions';
 import { expandObject } from '../../utility'
+import * as paginationReducer from './paginationReducer';
 
 const initialState = {
-    isLoading: false,
-    loadedUsers: [],
-    editing: null
+    fetching: false,
+    loaded: false,
+    editing: null,
+    pagination: paginationReducer.build_state(10)
 }
 
 const addUser = (state, user) => {
-    const users = state.loadedUsers.slice();
-    if (!users.some((c) => c.id === user.id)) {
-        users.push(users);
+    if (!state.pagination.all.some((c) => c.id === user.id)) {
+        const domains = [action.payload, ...state.pagination.all];
+        const pagination = paginationReducer.set_content(state.pagination, domains);
+    
+        return expandObject(state, { pagination });
     }
 
-    return expandObject(state, { loadedUsers: users });
+    return state;
 }
 
 const usersReducer = (state = initialState, action) => {
@@ -21,15 +25,19 @@ const usersReducer = (state = initialState, action) => {
         case actionTypes.CLEAR_USER_DATA:
             return initialState;
             
-        case actionTypes.SET_LOADING_USERS:
-            return expandObject(state, { isLoading: action.payload });
+        case actionTypes.FETCHING_USERS:
+            return expandObject(state, { fetching: action.payload });
         case actionTypes.SET_LOADEDUSERS:
-            return expandObject(state, { loadedUsers: action.payload, isLoading: false});
+            const pagination = paginationReducer.set_content(state.pagination, action.payload);
+            return expandObject(state, { pagination, fetching: false, loaded: true });
+
         case actionTypes.APPEND_LOADED_USER:
             return addUser(state, action.payload);
         
         case actionTypes.SET_EDITING_USER:
-            return expandObject(state, { editing: action.payload, isLoading: false });
+            return expandObject(state, { editing: action.payload, fetching: false  });
+        case actionTypes.SET_USERS_PAGE:
+            return expandObject(state, { pagination: paginationReducer.set_page(state.pagination, action.payload) });
     }
 
     return state;

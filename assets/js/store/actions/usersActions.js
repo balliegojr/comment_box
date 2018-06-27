@@ -4,7 +4,7 @@ import { cloneObject } from '../../utility';
 
 export const setLoadingUsers = (isLoading) => {
     return {
-        type: actionTypes.SET_LOADING_USERS,
+        type: actionTypes.FETCHING_USERS,
         payload: isLoading
     }
 }
@@ -46,7 +46,7 @@ export const edituser = (user_id) => (dispatch, getStore) => {
         return;
     }
 
-    const filtered_users = getStore().users.loadedUsers.filter((user) => user.id === user_id);
+    const filtered_users = getStore().users.pagination.all.filter((user) => user.id === user_id);
     if (!!filtered_users.length) {
         const user = cloneObject(filtered_users[0]);
         dispatch(setEditingUser(user));
@@ -64,4 +64,11 @@ export const saveUserChangesFromAdmin = (user_info) => (dispatch) => {
             .then(() => { 
 
             });
+}
+
+export const setUsersPage = (page) => {
+    return {
+        type: actionTypes.SET_USERS_PAGE,
+        payload: page
+    }
 }

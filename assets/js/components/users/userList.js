@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Switcher from '../pagination/switcher';
 
 import { usersActions } from '../../store/actions';
 
@@ -60,24 +61,28 @@ export class UserList extends Component {
                 </div>
             </div>
         );
-        if (!!this.props.users.loadedUsers.length) {
-            const users = this.props.users.loadedUsers.map((user) => <UserRow key={user.id} user={user} />)
+        if (!!this.props.users.pagination.all.length) {
+            const users = this.props.users.pagination.current.map((user) => <UserRow key={user.id} user={user} />)
             content = (
-                <table className="table table-striped">
-                    <thead>
-                        <tr>
-                            <th> Name </th>
-                            <th> Username </th>
-                            <th> Email </th>
-                            <th> Roles </th>
-                            <th> Status </th>
-                            <th>  </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {users}
-                    </tbody>
-                </table>
+                <div>
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Name </th>
+                                <th> Username </th>
+                                <th> Email </th>
+                                <th> Roles </th>
+                                <th> Status </th>
+                                <th>  </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users}
+                        </tbody>
+                    </table>
+
+                    <Switcher pagination={this.props.users.pagination} setPage={this.props.setPage} />
+                </div>
             )
         }
         
@@ -109,7 +114,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        doLoadUsers: (userType) => dispatch(usersActions.loadUsers(userType))
+        doLoadUsers: (userType) => dispatch(usersActions.loadUsers(userType)),
+        setPage: (page) => dispatch(userActions.setUsersPage(page))
     }
 }
 

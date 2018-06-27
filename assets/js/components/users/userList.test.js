@@ -4,6 +4,8 @@ import Adapter from 'enzyme-adapter-react-16';
 import { Link } from 'react-router-dom';
 
 import { UserList } from './userList';
+import * as pagination from '../../store/reducers/paginationReducer';
+import Switcher from '../pagination/switcher';
 
 configure({adapter: new Adapter()});
 
@@ -12,7 +14,7 @@ describe('<UserList />', () => {
     let doLoadUsers;
     beforeEach(() => {
         doLoadUsers = jest.fn();
-        wrapper = shallow(<UserList doLoadUsers={doLoadUsers} users={{loadedUsers: []}} />);
+        wrapper = shallow(<UserList doLoadUsers={doLoadUsers} users={{ pagination: pagination.set_content(pagination.build_state(10), []) }} />);
     });
 
     it('should call doLoadUsers', () => {
@@ -30,7 +32,7 @@ describe('<UserList />', () => {
     });
 
     it('should render a table with users information', ()=>{
-        wrapper.setProps({ users: {loadedUsers:[{id: 1, roles:[]}, {id: 2}]}});
+        wrapper.setProps({ users: { pagination: pagination.set_content(pagination.build_state(10), [{id: 1, roles: []}, { id: 2 }]) }});
 
         expect(wrapper.find('tbody').children()).toHaveLength(2);
         const firstRow = wrapper.find('tbody').children().first().dive();
