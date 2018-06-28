@@ -1,6 +1,6 @@
 # CommentBox
 
-This is a comment box to be used embeded in any website. 
+This is a comment box to be used embedded in any website. 
 
 ## Features
 
