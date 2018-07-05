@@ -1,6 +1,7 @@
 import { actionTypes } from '../actions'
 import * as domainService  from '../../services/domainService';
 import { cloneObject } from '../../utility';
+import { setProgressBar } from './globalActions';
 
 const setLoadingDomains = (isLoading) => {
     return { 
@@ -28,13 +29,16 @@ export const loadDomains = () => (dispatch, getStore) => {
         return Promise.resolve();
     }
     
+    dispatch(setProgressBar(true));
     dispatch(setLoadingDomains(true));
 
     return domainService.getDomains()
         .then((domains) => {
             dispatch(setDomains(domains));
+            dispatch(setProgressBar(false));
         }, reason => {
             dispatch(setLoadingDomains(false));
+            dispatch(setProgressBar(false));
         });
 }
 

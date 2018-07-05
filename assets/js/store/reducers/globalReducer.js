@@ -1,12 +1,13 @@
 import  { actionTypes } from '../actions'
 import { expandObject } from '../../utility'
-import { getToken, hasToken, setToken, setHeader, clearToken } from '../../services/accountService'
+import { setToken, setHeader, clearToken } from '../../services/accountService'
 
-const token = getToken();
 const initialState = {
     current: null,
     token: null,
-    isAuthenticated: false
+    isAuthenticated: false,
+
+    showProgressBar: false
 }
 
 const setTokenReducer = (state, action) => {
@@ -21,7 +22,7 @@ const clearUserDataReducer = (state, action) => {
 }
 
 
-const authReducer = (state = initialState, action) => {
+const globalReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.SET_AUTH_TOKEN:
             return setTokenReducer(state, action);
@@ -29,8 +30,10 @@ const authReducer = (state = initialState, action) => {
             return expandObject(state, { current: action.payload });
         case actionTypes.CLEAR_USER_DATA:
             return clearUserDataReducer(state, action);
+        case actionTypes.SET_PROGRESS_BAR:
+            return expandObject(state, { showProgressBar: action.payload });
     }
     return state;
 }
 
-export default authReducer;
+export default globalReducer;

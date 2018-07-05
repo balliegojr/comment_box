@@ -1,4 +1,4 @@
-import authReducer from "./authReducer";
+import globalReducer from "./globalReducer";
 import commentsReducer from "./commentsReducer";
 import pageSettingsReducer from "./pageSettingsReducer";
 import usersReducer from "./usersReducer";
@@ -6,7 +6,7 @@ import domainReducer from "./domainReducer";
 import pagesReducer from "./pagesReducer";
 
 export {
-    authReducer,
+    globalReducer,
     commentsReducer,
     pageSettingsReducer,
     usersReducer,

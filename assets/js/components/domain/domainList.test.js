@@ -27,9 +27,9 @@ describe('<DomainList />', () => {
         expect(wrapper.find(Switcher)).toHaveLength(1);
     });
 
-    it('should render a loading message', () => {
+    it('should render nothing when still loading', () => {
         wrapper.setProps({ domains: { fetching: true }});
-        expect(wrapper.contains(<div className="alert alert-info text-center">Loading</div>)).toBeTruthy();
+        expect(wrapper.contains(<div></div>)).toBeTruthy();
     });
 
     it('should render an empty content message', () => {

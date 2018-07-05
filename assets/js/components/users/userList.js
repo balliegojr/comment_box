@@ -52,15 +52,7 @@ export class UserList extends Component {
 
 
     render() {
-        let content = (
-            <div className="row">
-                <div className="col-sm-12">
-                    <div className="alert alert-info text-center">
-                        There are no users to show
-                    </div>
-                </div>
-            </div>
-        );
+        let content = (<div></div>);
         if (!!this.props.users.pagination.all.length) {
             const users = this.props.users.pagination.current.map((user) => <UserRow key={user.id} user={user} />)
             content = (

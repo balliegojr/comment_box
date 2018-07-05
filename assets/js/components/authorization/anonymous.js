@@ -14,7 +14,7 @@ export class Anonymous extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.global
     }
 }
 

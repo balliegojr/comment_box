@@ -48,10 +48,10 @@ describe('<PageList />', () => {
 
     it('should render loading message', () => {
         wrapper.setProps({ pages: { fetching: true }});
-        expect(wrapper.contains(<div className="alert alert-info text-center">Loading</div>)).toBeTruthy();
+        expect(wrapper.contains(<div></div>)).toBeTruthy();
     });
 
-    it('should render "no pages" message', () => {
+    it('should render nothing when still loading', () => {
         wrapper.setProps({ pages: { pagination: { all: [] } }});
         expect(wrapper.contains(<div className="alert alert-info text-center">There are no pages to show</div>)).toBeTruthy();
     });

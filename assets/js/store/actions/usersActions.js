@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes'
 import { getUsers, getUser, saveUserFromAdmin } from '../../services/usersService'
 import { cloneObject } from '../../utility';
+import { setProgressBar } from './globalActions';
 
 export const setLoadingUsers = (isLoading) => {
     return {
@@ -18,12 +19,16 @@ export const setLoadedusers = (loadedUsers) => {
 
 
 export const loadUsers = (userType) => dispatch => {
+    dispatch(setProgressBar(true));
     dispatch(setLoadingUsers(true));
 
     return getUsers(userType)
         .then(users => {
             dispatch(setLoadedusers(users.data))
-        }, reason => {});
+            dispatch(setProgressBar(false));
+        }, reason => {
+            dispatch(setProgressBar(false));
+        });
 };
 
 const setEditingUser = (user) => {
@@ -51,10 +56,15 @@ export const edituser = (user_id) => (dispatch, getStore) => {
         const user = cloneObject(filtered_users[0]);
         dispatch(setEditingUser(user));
     } else {
+        dispatch(setProgressBar(true));
+
         getUser(user_id)
             .then(user => {
+                dispatch(setProgressBar(false));
                 dispatch(setEditingUser(user.data))
-            }, reason => {});
+            }, reason => {
+                dispatch(setProgressBar(false));
+            });
     }
 
 }

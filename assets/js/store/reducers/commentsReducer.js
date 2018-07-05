@@ -22,8 +22,8 @@ const updateComment = (state, comment) => {
 
 const commentsReducer = (state = initialState, action) => {
     switch (action.type) {
-        case actionTypes.CLEAR_USER_DATA:
-            return initialState;
+        // case actionTypes.CLEAR_USER_DATA:
+        //     return initialState;
         case actionTypes.LOADING_COMMENTS:
             return expandObject(state, { isLoading: action.payload })
         case actionTypes.SET_COMMENTS:

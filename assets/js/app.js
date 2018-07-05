@@ -27,7 +27,7 @@ import { ToastContainer } from 'react-toastify';
 // paths "./socket" or full ones "web/static/js/socket".
 
 import * as socketService from "./services/socketService";
-import { authReducer, commentsReducer, pageSettingsReducer } from "./store/reducers";
+import { globalReducer, commentsReducer, pageSettingsReducer } from "./store/reducers";
 
 import { accountActions } from './store/actions';
 import * as accountService from './services/accountService';
@@ -40,7 +40,7 @@ socketService.connect();
 const rootReducer = combineReducers({
     pageSettings: pageSettingsReducer,
     comments: commentsReducer,
-    user: authReducer
+    global: globalReducer
 });
 
 // const store = createStore(rootReducer, compose(applyMiddleware(redux_logger, thunk)));

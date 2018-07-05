@@ -51,13 +51,13 @@ export class AdminHeader extends Component {
         return (
             //navbar-fixed-top
             <nav className="navbar navbar-default navbar-fixed-top">
-                <div className="navbar-header navbar-left">
-                    <Link to="/" className="navbar-brand"> 
-                        <img src="/images/steel_box.png" className="img img-responsive logo" />
-                     </Link>
-                </div>
                 { userMenu }
                 <div className="container">
+                    <div className="navbar-header navbar-left">
+                        <Link to="/" className="navbar-brand"> 
+                            <img src="/images/steel_box.png" className="img img-responsive logo" />
+                        </Link>
+                    </div>
                     <div className="collapse navbar-collapse">
                         <ul className="nav navbar-nav navbar-center">
                             <Role roles={["Admin"]}>
@@ -72,6 +72,12 @@ export class AdminHeader extends Component {
 
                     </div>
                 </div>
+                { 
+                    this.props.user.showProgressBar 
+                        ? <div className="loader"></div>
+                        : null
+                }
+
             </nav>
         );
     }
@@ -79,7 +85,7 @@ export class AdminHeader extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.global
     }
 }
 

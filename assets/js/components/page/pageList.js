@@ -29,15 +29,7 @@ export class PageList extends Component {
     }
     render() {
         if (this.props.pages.fetching) {
-            return (
-                <div className="row">
-                    <div className="col-sm-12">
-                        <div className="alert alert-info text-center">
-                            Loading
-                        </div>
-                    </div>
-                </div>
-            )
+            return (<div></div>);
         }
 
         if (!this.props.pages.pagination.all.length) {

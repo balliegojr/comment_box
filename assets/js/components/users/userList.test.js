@@ -27,10 +27,6 @@ describe('<UserList />', () => {
         expect(wrapper.state()).toEqual({currentUserType: 'owner'});
     });
 
-    it('should render "no users" message', () => {
-        expect(wrapper.find('.alert.alert-info').text()).toEqual('There are no users to show');
-    });
-
     it('should render a table with users information', ()=>{
         wrapper.setProps({ users: { pagination: pagination.set_content(pagination.build_state(10), [{id: 1, roles: []}, { id: 2 }]) }});
 

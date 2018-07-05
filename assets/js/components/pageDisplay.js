@@ -83,7 +83,7 @@ export class PageDisplay extends Component {
 const mapStateToProps = state => {
     return {
         settings: state.pageSettings,
-        user: state.user
+        user: state.global
     }
 };
 

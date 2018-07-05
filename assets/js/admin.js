@@ -30,7 +30,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom"
 import * as socketService from "./services/socketService";
 
 
-import { authReducer, usersReducer, domainReducer, pagesReducer } from './store/reducers/'
+import { globalReducer, usersReducer, domainReducer, pagesReducer } from './store/reducers/'
 import { accountActions } from './store/actions';
 import * as accountService from './services/accountService';
 
@@ -45,14 +45,14 @@ import PageEdit from './components/page/pageEdit';
 import PageList from './components/page/pageList';
 
 import { redux_logger } from './utility';
-import { Authenticated, Anonymous, Role, AuthenticatedRoute } from './components/authorization';
+import { Anonymous, AuthenticatedRoute } from './components/authorization';
 import AuthenticationForms from './components/authentication/authenticationForms';
 import { ToastContainer } from 'react-toastify';
 
 socketService.connect();
 
 const rootReducer = combineReducers({
-    user: authReducer,
+    global: globalReducer,
     users: usersReducer,
     domains: domainReducer,
     pages: pagesReducer

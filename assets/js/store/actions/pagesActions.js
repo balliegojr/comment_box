@@ -1,6 +1,7 @@
 import * as actionTypes from './actionTypes'
 import * as pagesService from "../../services/pagesService";
 import { cloneObject } from '../../utility';
+import { setProgressBar } from './globalActions';
 
 const setLoadingPages = (isLoading) => {
     return {
@@ -21,10 +22,16 @@ export const loadPages = () => (dispatch, getStore) => {
         return Promise.resolve();
     }
     
+    dispatch(setProgressBar(true));
     dispatch(setLoadingPages(true));
 
     return pagesService.getPages()
-        .then((pages) => dispatch(setPages(pages)));
+        .then((pages) => { 
+            dispatch(setPages(pages))
+            dispatch(setProgressBar(false));
+        }, () => {
+            dispatch(setProgressBar(false));
+        });
 }
 
 

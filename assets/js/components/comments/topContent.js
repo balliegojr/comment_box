@@ -22,7 +22,7 @@ export class TopContent extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user.current
+        user: state.global.current
     }
 }
 

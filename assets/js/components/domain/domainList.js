@@ -74,15 +74,7 @@ export class DomainList extends Component {
 
     render() {
         if (this.props.domains.fetching) {
-            return (
-                <div className="row">
-                    <div className="col-sm-12">
-                        <div className="alert alert-info text-center">
-                            Loading
-                        </div>
-                    </div>
-                </div>
-            )
+            return (<div></div>);
         }
 
         if (!this.props.domains.pagination.current.length) {
