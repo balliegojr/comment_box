@@ -99,7 +99,7 @@ defmodule CommentBox.Accounts do
   """
   def update_user(%User{} = user, %{ "current_password" => password } = attrs) do
     case Comeonin.Bcrypt.checkpw(password, user.password_hash) do
-      true -> user |> User.changeset(attrs) |> Repo.update()
+      true -> user |> User.changeset(Map.put(attrs, "auth_provider", "identity")) |> Repo.update()
       _ -> {:error, :unauthorized}
     end
   end
@@ -213,9 +213,8 @@ defmodule CommentBox.Accounts do
   end
 
   def authenticate(user, password) do
-    
     # Does password match the one stored in the database?
-    case Comeonin.Bcrypt.checkpw(password, user.password_hash) do
+    case Comeonin.Bcrypt.checkpw(password, user.password_hash) && user.auth_provider === "identity" do
       true ->
         roles = case Enum.any?(user.user_roles, fn ur -> ur.role.name === "Admin" end) do
           true -> %{ is_admin: true }

@@ -18,7 +18,7 @@ admin_role = Repo.get_by!(Role, name: "Admin")
 owner_role = Repo.get_by!(Role, name: "Owner")
 
 user = %User{}
-    |> User.changeset(%{username: "admin", email: "admin", password: "admin", password_confirmation: "admin"})
+    |> User.changeset(%{username: "admin", email: "admin", password: "admin", password_confirmation: "admin", auth_provider: "identity"})
     |> Ecto.Changeset.put_assoc(:user_roles, [%UserRole{ role: admin_role}, %UserRole{ role: owner_role}])
 
     |> Repo.insert!()

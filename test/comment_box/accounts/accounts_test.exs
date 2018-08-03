@@ -7,9 +7,9 @@ defmodule CommentBox.AccountsTest do
   describe "users" do
     alias CommentBox.Accounts.User
 
-    @valid_attrs %{account_status: 42, email: "some email", name: "some name", password: "some password", password_confirmation: "some password", username: "some username"}
-    @update_attrs %{account_status: 43, email: "some updated email", name: "some updated name", password: "updated password", password_confirmation: "updated password", username: "some updated username"}
-    @invalid_attrs %{account_status: nil, email: nil, name: nil, password_hash: nil, username: nil}
+    @valid_attrs %{"account_status" => 42, "email" => "some email", "name" => "some name", "password" => "some password", "password_confirmation" => "some password", "username" => "some username", "auth_provider" => "identity"}
+    @update_attrs %{"account_status" => 43, "email" => "some updated email", "name" => "some updated name", "password" => "updated password", "password_confirmation" => "updated password", "username" => "some updated username"}
+    @invalid_attrs %{"account_status" => nil, "email" => nil, "name" => nil, "password_hash" => nil, "username" => nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -55,13 +55,10 @@ defmodule CommentBox.AccountsTest do
       user = user_fixture()
       hash = user.password_hash
 
-      update_attrs = for {k, v} <- Map.put(@update_attrs, :current_password, "wrong password"),
-        do: {to_string(k), v}, into: %{}
-
+      update_attrs = Map.put(@update_attrs, "current_password", "wrong password")
       assert {:error, :unauthorized} = Accounts.update_user(user, update_attrs)
 
-      update_attrs = for {k, v} <- Map.put(@update_attrs, :current_password, "some password"),
-        do: {to_string(k), v}, into: %{}
+      update_attrs = Map.put(@update_attrs, "current_password", "some password")
 
       assert {:ok, user} = Accounts.update_user(user, update_attrs)
       assert %User{} = user

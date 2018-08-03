@@ -25,7 +25,7 @@ export function clearToken() {
 
 export function signin(username, password) {
     return new Promise((resolve, reject) => {
-        axios.post("/api/auth/signin", { user: { username: username, password: password} })
+        axios.post("/auth/identity/callback", { user: { username: username, password: password} })
             .then((tokenData) => {
                 // setToken(tokenData.data.access_token);
                 // setHeader(tokenData.data.access_token);

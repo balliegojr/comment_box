@@ -8,7 +8,7 @@ defmodule CommentBoxWeb.AuthenticateHelper do
     def get_default_user do
         {:ok, user} = case Accounts.find_by_username("user") do
             nil -> 
-                {:ok, %{id: user_id}} = Accounts.create_user(%{email: "user@email.com", username: "user", password: "123", password_confirmation: "123"})
+                {:ok, %{id: user_id}} = Accounts.create_user(%{"email" => "user@email.com", "username" => "user", "password" => "123", "password_confirmation" => "123", "auth_provider" => "identity"})
                 {:ok, Accounts.get_user!(user_id)}
             user -> {:ok, user}
         end

@@ -19,7 +19,7 @@ import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 // Import local files
 //
@@ -61,4 +61,12 @@ if (window.parent.commentbox) {
 
 if (accountService.hasToken()) {
     store.dispatch(accountActions.setTokenAndLoadUser(accountService.getToken()));
+}
+
+global.authHook = (info) => {
+    if (info.error) {
+        toast.error("somenthing went wrong");
+    } else {
+        store.dispatch(accountActions.setTokenAndLoadUser(info.token));
+    }
 }

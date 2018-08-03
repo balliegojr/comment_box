@@ -20,6 +20,7 @@ import { Provider } from "react-redux"
 import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import { BrowserRouter, Route, Switch } from "react-router-dom"
+import { ToastContainer, toast } from 'react-toastify';
 
 
 // Import local files
@@ -47,7 +48,7 @@ import PageList from './components/page/pageList';
 import { redux_logger } from './utility';
 import { Anonymous, AuthenticatedRoute } from './components/authorization';
 import AuthenticationForms from './components/authentication/authenticationForms';
-import { ToastContainer } from 'react-toastify';
+
 
 socketService.connect();
 
@@ -99,4 +100,13 @@ ReactDOM.render(
 
 if (accountService.hasToken()) {
     store.dispatch(accountActions.setTokenAndLoadUser(accountService.getToken()));
+}
+
+
+global.authHook = (info) => {
+    if (info.error) {
+        toast.error("somenthing went wrong");
+    } else {
+        store.dispatch(accountActions.setTokenAndLoadUser(info.token));
+    }
 }

@@ -182,3 +182,28 @@ input:checked + .slider:before {
     95% {left: 120%;}
     to {left: 100%;}
 }
+
+.github-button {
+    border: solid 1px black;
+    border-radius: 2px;
+    height: 40px;
+    display: inline-block;
+    margin-top: 4px;
+    vertical-align: top;
+    background: black;
+}
+
+.github-button svg {
+    padding: 4px;
+    background: white;
+    height: 38px;
+    width: 38px;
+}
+
+.github-button span {
+    display: inline-block;
+    vertical-align: top;
+    margin: 9px 9px;
+    font-weight: bold;
+    color: white;
+}

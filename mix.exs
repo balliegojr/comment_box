@@ -20,7 +20,7 @@ defmodule CommentBox.Mixfile do
   def application do
     [
       mod: {CommentBox.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :ueberauth, :ueberauth_google, :ueberauth_identity, :ueberauth_twitter, :ueberauth_github]
     ]
   end
 
@@ -42,9 +42,15 @@ defmodule CommentBox.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:guardian, "~> 1.0.1"},
+      {:ueberauth, "~> 0.5.0"},
+      {:ueberauth_google, "~> 0.7.0"},
+      {:ueberauth_identity, "~> 0.2.3"},
+      {:ueberauth_twitter, "~> 0.2"},
+      {:ueberauth_github, "~> 0.7.0"},
       {:comeonin, "~> 4.0"},
       {:bcrypt_elixir, "~> 1.0"},
-      {:httpoison, "~> 1.0"},
+      {:httpoison, "~> 1.0", override: true},
+      {:poison, "~> 3.0", override: true},
       {:distillery, "~> 1.5", runtime: false}
     ]
   end

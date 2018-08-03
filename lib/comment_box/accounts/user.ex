@@ -13,6 +13,9 @@ defmodule CommentBox.Accounts.User do
     field :reputation, :integer
     field :plan, :string
 
+    field :auth_provider, :string
+    field :avatar, :string
+
     field :password, :string, virtual: true
     field :password_confirmation, :string, virtual: true
 
@@ -22,15 +25,22 @@ defmodule CommentBox.Accounts.User do
   end
 
   @doc false
+  def changeset(user, %{ "auth_provider" => "identity" } = attrs) do
+    user
+      |> cast(attrs, [:name, :username, :email, :password, :password_confirmation, :account_status, :auth_provider, :avatar])
+      |> validate_required([:username, :email, :password, :password_confirmation, :auth_provider])
+      |> validate_confirmation(:password, message: "Password does not match")
+      |> unique_constraint(:username, message: "Username already in use")
+      |> unique_constraint(:email, message: "Email already in use")
+      |> put_pass_hash()
+  end
+
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:name, :username, :email, :password, :password_confirmation, :account_status])
-    |> validate_required([:username, :email, :password, :password_confirmation])
-    |> validate_confirmation(:password, message: "Password does not match")
-    |> unique_constraint(:username, message: "Username already in use")
-    |> unique_constraint(:email, message: "Email already in use")
-    |> put_pass_hash()
-    
+      |> cast(attrs, [:name, :username, :email, :password, :password_confirmation, :account_status, :auth_provider, :avatar])
+      |> validate_required([:username, :email, :auth_provider])
+      |> unique_constraint(:username, message: "Username already in use")
+      |> unique_constraint(:email, message: "Email already in use")
   end
 
   def update_nopassword_changeset(user, attrs) do

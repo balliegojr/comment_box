@@ -26,6 +26,25 @@ config :comment_box, CommentBox.Auth.Guardian,
   issuer: "comment_box",
   secret_key: "dxGFAvd4m8cn58nGfNweQiEifcZIjl3Ce89pwOgCY8UzfIGviEU6abdP2HufVsPZ"
 
+config :ueberauth, Ueberauth,
+  providers: [
+    google: { Ueberauth.Strategy.Google, [] },
+    github: { Ueberauth.Strategy.Github, [] },
+    identity: { Ueberauth.Strategy.Identity, [callback_methods: ["POST"]]}
+  ]
+
+config :ueberauth, Ueberauth.Strategy.Google.OAuth,
+  client_id: System.get_env("GOOGLE_CLIENT_ID"),
+  client_secret: System.get_env("GOOGLE_CLIENT_SECRET")
+
+config :ueberauth, Ueberauth.Strategy.Twitter.OAuth,
+  consumer_key: System.get_env("TWITTER_CONSUMER_KEY"),
+  consumer_secret: System.get_env("TWITTER_CONSUMER_SECRET")
+
+config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+  client_id: System.get_env("GITHUB_CLIENT_ID"),
+  client_secret: System.get_env("GITHUB_CLIENT_SECRET")
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"

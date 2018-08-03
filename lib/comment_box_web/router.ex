@@ -13,16 +13,6 @@ defmodule CommentBoxWeb.Router do
     plug :accepts, ["json"]
   end
 
-  # defp put_user_token(conn, _) do
-  #   if current_user = Guardian.Plug.current_resource(conn) do
-  #     token = Phoenix.Token.sign(conn, "user socket", current_user.id)
-  #     assign(conn, :user_token, token)
-  #   else
-  #     conn
-  #   end
-  # end
-
-
   pipeline :api_auth do
     # plug :api
     plug :accepts, ["json"]
@@ -37,6 +27,17 @@ defmodule CommentBoxWeb.Router do
     plug CommentBox.Auth.PipelineAdmin
   end
   
+  scope "/auth", CommentBoxWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+  end
+  scope "/auth", CommentBoxWeb do
+    pipe_through :api
+    
+    post "/identity/callback", AuthController, :identity_callback
+  end
   
   # Other scopes may use custom stacks.
   scope "/api", CommentBoxWeb do
@@ -44,9 +45,8 @@ defmodule CommentBoxWeb.Router do
     
     get "/page", PageSettingsController, :get_page_settings
     get "/page/:page_id/comment", CommentController, :get_page_comments
-
-    post "/auth/signin", UserController, :sign_in
-    post "/user", UserController, :sign_up
+    
+    post "/user", AuthController, :sign_up
   end
   
   scope "/api", CommentBoxWeb do
