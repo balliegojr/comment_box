@@ -1,19 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title></title>
-  </head>
-
-  <body>
-    <script>
-        window.opener.authHook({ error: "Something went grong" });
-        window.close();
-    </script>
-  </body>
-</html>
+<script>
+    window.opener.authHook({ error: "Something went grong" });
+    window.close();
+</script>
